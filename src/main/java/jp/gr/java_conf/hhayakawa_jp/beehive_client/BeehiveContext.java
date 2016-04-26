@@ -1,6 +1,7 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.http.HttpEntity;
@@ -26,6 +27,7 @@ class BeehiveContext {
          *  TODO: パスワード誤りなどの認証エラーをケアする
          */
         // header
+        // TODO: 入力値のチェック
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.set(HttpHeaders.AUTHORIZATION,
@@ -38,7 +40,7 @@ class BeehiveContext {
                 entity, AntiCsrfToken.class);
         List<String> cookies = result.getHeaders().get("Set-Cookie");
         if (cookies == null || cookies.size() == 0) {
-            // TODO: 例�?
+            // TODO: エラー処理
         }
         String session = null;
         for (String cookie : cookies) {
@@ -53,8 +55,9 @@ class BeehiveContext {
     }
 
     private static String makeBasicAuthString(String user, String password) {
-        // TODO: 実装
-        return null;
+        String src = user + ":" + password;
+        byte[] encoded = Base64.getEncoder().encode(src.getBytes());
+        return new String(encoded);
     }
 
     boolean isActive() {
