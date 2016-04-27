@@ -22,10 +22,15 @@ class BeehiveContext {
         return context;
     }
 
+    /**
+     *  TODO: パスワード誤りなどの認証エラーをケアする
+     */
     private static BeehiveCredential login(String user, String password) {
-        /**
-         *  TODO: パスワード誤りなどの認証エラーをケアする
-         */
+        if (user == null || user.length() == 0 
+                || password == null || password.length() == 0) {
+            throw new NullPointerException(
+                    "user name or password is not specified.");
+        }
         // header
         // TODO: 入力値のチェック
         HttpHeaders headers = new HttpHeaders();
