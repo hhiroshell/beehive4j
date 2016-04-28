@@ -1,6 +1,7 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
 import java.io.IOException;
+import java.net.HttpCookie;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -81,9 +82,11 @@ abstract class BeehiveInvoker {
     private void setDefaultHeaders(BeehiveCredential credential) {
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
-        Map<String, String> cookie = new HashMap<String, String>(1);
-        cookie.put(HttpHeaders.COOKIE, credential.getSession());
-        addHeader(cookie);
+        Map<String, String> additionalHeaders = new HashMap<String, String>(1);
+        HttpCookie sessionCookie = credential.getSession();
+        additionalHeaders.put(HttpHeaders.COOKIE,
+                sessionCookie.getName() + "=" + sessionCookie.getValue());
+        addHeader(additionalHeaders);
     }
 
     private void setDefaultUrlQueries(BeehiveCredential credential) {
