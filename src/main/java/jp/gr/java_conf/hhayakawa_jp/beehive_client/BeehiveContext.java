@@ -8,12 +8,16 @@ import java.util.List;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BClientException;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BClientUnauthorizedException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientUnauthorizedException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientHttpErrorException;
 
 // TODO: Beehiveとのセッションタイムアウトを考慮する
 public class BeehiveContext {
@@ -21,23 +25,23 @@ public class BeehiveContext {
     private BeehiveCredential credential = null;
 
     public static BeehiveContext getBeehiveContext(String user, String password)
-            throws BClientException {
+            throws BeeClientException {
         BeehiveContext context = new BeehiveContext();
         context.credential = login(user, password);
         return context;
     }
 
     /**
-     *  TODO: パスワード誤りなどの認証エラーをケアする
-     *  
-     * @throws BClientUnauthorizedException 
+     * 
+     * @throws BeeClientUnauthorizedException 
+     * @throws BeeClientHttpErrorException 
      */
     private static BeehiveCredential login(String user, String password)
-            throws BClientUnauthorizedException {
+            throws BeeClientHttpErrorException, BeeClientUnauthorizedException {
         if (user == null || user.length() == 0 
                 || password == null || password.length() == 0) {
             throw new NullPointerException(
-                    "user name or password is not specified.");
+                    "User name or password is not specified.");
         }
 
         // header
@@ -49,18 +53,31 @@ public class BeehiveContext {
 
         // invoke
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<AntiCsrfToken> result = restTemplate.exchange(
-                Constants.BEEHIVE_API_ROOT + "session/login", HttpMethod.POST,
-                entity, AntiCsrfToken.class);
+        ResponseEntity<AntiCsrfToken> result = null;
+        try {
+            result = restTemplate.exchange(
+                    Constants.BEEHIVE_API_ROOT + "session/login",
+                    HttpMethod.POST, entity, AntiCsrfToken.class);
+        } catch (RestClientException e) {
+            if (e instanceof HttpClientErrorException) {
+                HttpClientErrorException ce = (HttpClientErrorException)e;
+                HttpStatus status = ce.getStatusCode();
+                if (HttpStatus.UNAUTHORIZED.equals(status)) {
+                    throw new BeeClientUnauthorizedException(
+                            "Failed to authenticate.", ce);
+                }
+            }
+            throw new BeeClientHttpErrorException(e);
+        }
 
         // parse session cookie
         List<String> sessionHeader = result.getHeaders().get("Set-Cookie");
         if (sessionHeader == null || sessionHeader.size() == 0) {
-            throw new BClientUnauthorizedException();
+            throw new IllegalStateException("Cookie is not set.");
         }
         HttpCookie jsessionid = parseCookie(sessionHeader, "JSESSIONID");
         if (jsessionid == null) {
-            throw new BClientUnauthorizedException();
+            throw new IllegalStateException("JSESSIONID is not set.");
         }
         return new BeehiveCredential(jsessionid, result.getBody().getToken());
     }
@@ -85,7 +102,7 @@ public class BeehiveContext {
         }
         String[] keyValue = attributes[0].split("=");
         if (keyValue.length != 2) {
-            throw new IllegalArgumentException("Invalid cookie is going to bee set.");
+            throw new IllegalStateException("Invalid cookie is going to bee set.");
         }
         HttpCookie cookie = new HttpCookie(
                 keyValue[0].trim(), keyValue[1].trim());
