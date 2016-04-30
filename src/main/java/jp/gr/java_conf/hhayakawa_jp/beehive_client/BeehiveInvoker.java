@@ -61,17 +61,14 @@ abstract class BeehiveInvoker {
         return mapper.readTree(result.getBody());
     }
 
-    // TODO なんかスケルトンパターンぽくない
     protected void addHeader(Map<String, String> headers) {
         this.headers.setAll(headers);
     }
 
-    // TODO なんかスケルトンパターンぽくない
     protected void addUrlQuery(Map<String, String> queries) {
         this.urlQueries.putAll(queries);
     }
 
-    // TODO なんかスケルトンパターンぽくない
     protected void setPayload(BeehiveApiPayload payload) {
         this.payload = payload;
     }
