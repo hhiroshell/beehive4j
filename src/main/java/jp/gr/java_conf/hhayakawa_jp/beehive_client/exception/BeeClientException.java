@@ -2,16 +2,21 @@ package jp.gr.java_conf.hhayakawa_jp.beehive_client.exception;
 
 public class BeeClientException extends Exception {
 
-    public BeeClientException(String message) {
-        super(message);
+    private final ErrorDescription description;
+
+    public BeeClientException(ErrorDescription description) {
+        super(description.getFullDescription());
+        this.description = description;
     }
 
-    public BeeClientException(Throwable cause) {
-        super(cause);
+    public BeeClientException(
+            ErrorDescription description, Throwable cause) {
+        super(description.getFullDescription(), cause);
+        this.description = description;
     }
 
-    public BeeClientException(String message, Throwable cause) {
-        super(message, cause);
+    public ErrorDescription getErrorDescription() {
+        return description;
     }
 
     /**

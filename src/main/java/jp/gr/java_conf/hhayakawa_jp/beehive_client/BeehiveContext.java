@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientUnauthorizedException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.ErrorDescription;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientHttpErrorException;
 
 // TODO: Beehiveとのセッションタイムアウトを考慮する
@@ -63,11 +64,12 @@ public class BeehiveContext {
                 HttpClientErrorException ce = (HttpClientErrorException)e;
                 HttpStatus status = ce.getStatusCode();
                 if (HttpStatus.UNAUTHORIZED.equals(status)) {
-                    throw new BeeClientUnauthorizedException(
-                            "Failed to authenticate.", ce);
+                     new BeeClientUnauthorizedException(
+                            ErrorDescription.AUTHENTICATE_FAILED, ce);
                 }
             }
-            throw new BeeClientHttpErrorException(e);
+            throw new BeeClientHttpErrorException(
+                    ErrorDescription.UNEXPECTED_HTTP_ERROR, e);
         }
 
         // parse session cookie

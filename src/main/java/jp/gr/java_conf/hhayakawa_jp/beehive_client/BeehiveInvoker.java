@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientIllegalInvokerStateException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.ErrorDescription;
 
 abstract class BeehiveInvoker {
 
@@ -48,7 +49,7 @@ abstract class BeehiveInvoker {
     JsonNode invoke() throws JsonProcessingException, IOException, BeeClientException {
         if (!isPrepared()) {
             throw new BeeClientIllegalInvokerStateException(
-                    "Invoker is not correctly prepared.");
+                    ErrorDescription.INVOKER_NOT_CORRECTLY_PREPARED);
         }
         // header, body
         HttpEntity<BeehiveApiPayload> entity =

@@ -2,16 +2,13 @@ package jp.gr.java_conf.hhayakawa_jp.beehive_client.exception;
 
 public class BeeClientUnauthorizedException extends BeeClientException {
 
-    public BeeClientUnauthorizedException(String message) {
-        super(message);
+    public BeeClientUnauthorizedException(ErrorDescription description) {
+        super(description);
     }
 
-    public BeeClientUnauthorizedException(Throwable cause) {
-        super(cause);
-    }
-
-    public BeeClientUnauthorizedException(String message, Throwable cause) {
-        super(message, cause);
+    public BeeClientUnauthorizedException(
+            ErrorDescription description, Throwable cause) {
+        super(description, cause);
     }
 
     /**
