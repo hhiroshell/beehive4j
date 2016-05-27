@@ -4,7 +4,7 @@ import org.springframework.http.HttpMethod;
 
 final class InvtReadBatchInvoker extends BeehiveInvoker {
 
-    private static String PATH = "invt/read";
+    private static final String PATH = "invt/read";
 
     private static final HttpMethod METHOD = HttpMethod.POST;
 
