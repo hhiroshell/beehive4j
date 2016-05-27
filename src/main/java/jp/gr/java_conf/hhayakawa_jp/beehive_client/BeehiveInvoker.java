@@ -25,12 +25,7 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.ErrorDescription;
 
 abstract class BeehiveInvoker {
 
-    protected static final String BEEHIVE_API_ROOT =
-            "https://stbeehive.oracle.com/comb/v1/d/";
-
-    private final String endpoint;
-
-    private final HttpMethod method;
+    private final String api_root;
 
     private HttpHeaders headers = new HttpHeaders();
 
@@ -38,10 +33,8 @@ abstract class BeehiveInvoker {
 
     private BeehiveApiPayload payload;
 
-    BeehiveInvoker(
-            BeehiveCredential credential, String endpoint, HttpMethod method) {
-        this.endpoint = endpoint;
-        this.method = method;
+    BeehiveInvoker(String api_root, BeehiveCredential credential) {
+        this.api_root = api_root;
         setDefaultHeaders(credential);
         setDefaultUrlQueries(credential);
     }
@@ -57,7 +50,8 @@ abstract class BeehiveInvoker {
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> result = restTemplate.exchange(
-                endpoint + makeUrlQueryString(), method, entity, String.class);
+                api_root + getApiPath() + makeUrlQueryString(),
+                getHttpMethod(), entity, String.class);
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readTree(result.getBody());
     }
@@ -78,7 +72,11 @@ abstract class BeehiveInvoker {
         return this.payload;
     }
 
-    abstract protected boolean isPrepared();
+    abstract boolean isPrepared();
+
+    abstract String getApiPath();
+
+    abstract HttpMethod getHttpMethod();
 
     private void setDefaultHeaders(BeehiveCredential credential) {
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));

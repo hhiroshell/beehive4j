@@ -1,6 +1,7 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
 import java.net.HttpCookie;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
@@ -23,12 +24,17 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientHttpErrorE
 // TODO: Beehiveとのセッションタイムアウトを考慮する
 public class BeehiveContext {
 
+    private static final String BEEHIVE_API_CONTEXT_ROOT = "comb/v1/d/";
+
     private BeehiveCredential credential = null;
 
-    public static BeehiveContext getBeehiveContext(String user, String password)
-            throws BeeClientException {
+    private String api_root = null;
+
+    public static BeehiveContext getBeehiveContext(
+            URL host, String user, String password) throws BeeClientException {
         BeehiveContext context = new BeehiveContext();
-        context.credential = login(user, password);
+        context.api_root = makeApiRootString(host);
+        context.credential = login(context.api_root, user, password);
         return context;
     }
 
@@ -37,8 +43,13 @@ public class BeehiveContext {
      * @throws BeeClientUnauthorizedException 
      * @throws BeeClientHttpErrorException 
      */
-    private static BeehiveCredential login(String user, String password)
+    private static BeehiveCredential login(
+            String api_root, String user, String password)
             throws BeeClientHttpErrorException, BeeClientUnauthorizedException {
+        if (api_root == null) {
+            throw new NullPointerException(
+                    "Destination URL is not specified.");
+        }
         if (user == null || user.length() == 0 
                 || password == null || password.length() == 0) {
             throw new NullPointerException(
@@ -56,8 +67,7 @@ public class BeehiveContext {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<AntiCsrfToken> result = null;
         try {
-            result = restTemplate.exchange(
-                    Constants.BEEHIVE_API_ROOT + "session/login",
+            result = restTemplate.exchange(api_root + "session/login",
                     HttpMethod.POST, entity, AntiCsrfToken.class);
         } catch (RestClientException e) {
             if (e instanceof HttpClientErrorException) {
@@ -82,6 +92,21 @@ public class BeehiveContext {
             throw new IllegalStateException("JSESSIONID is not set.");
         }
         return new BeehiveCredential(jsessionid, result.getBody().getToken());
+    }
+
+    private static String makeApiRootString(URL host) {
+        StringBuffer buf = new StringBuffer();
+        buf.append(host.getProtocol());
+        buf.append("://");
+        buf.append(host.getHost());
+        int port = host.getPort();
+        if (port >= 0) {
+            buf.append(":");
+            buf.append(port);
+        }
+        buf.append("/");
+        buf.append(BEEHIVE_API_CONTEXT_ROOT);
+        return buf.toString();
     }
 
     private static String makeBasicAuthString(String user, String password) {
@@ -122,11 +147,11 @@ public class BeehiveContext {
         }
         switch (api) {
             case INVT_LIST_BYRANGE:
-                return new InvtListByRangeInvoker(this.credential);
+                return new InvtListByRangeInvoker(this.api_root, this.credential);
             case INVT_READ_BATCH:
-                return new InvtReadBatchInvoker(this.credential);
+                return new InvtReadBatchInvoker(this.api_root, this.credential);
             case BKRS_READ_BATCH:
-                return new BkrsReadBatchInvoker(this.credential);
+                return new BkrsReadBatchInvoker(this.api_root, this.credential);
             default:
                 return null;
         }

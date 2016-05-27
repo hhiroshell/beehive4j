@@ -4,11 +4,22 @@ import org.springframework.http.HttpMethod;
 
 final class InvtReadBatchInvoker extends BeehiveInvoker {
 
-    private static String ENDPOINT = 
-            Constants.BEEHIVE_API_ROOT + "invt/read";
+    private static String PATH = "invt/read";
 
-    InvtReadBatchInvoker(BeehiveCredential credential) {
-        super(credential, ENDPOINT, HttpMethod.POST);
+    private static final HttpMethod METHOD = HttpMethod.POST;
+
+    InvtReadBatchInvoker(String api_root, BeehiveCredential credential) {
+        super(api_root, credential);
+    }
+
+    @Override
+    String getApiPath() {
+        return PATH;
+    }
+
+    @Override
+    HttpMethod getHttpMethod() {
+        return METHOD;
     }
 
     @Override

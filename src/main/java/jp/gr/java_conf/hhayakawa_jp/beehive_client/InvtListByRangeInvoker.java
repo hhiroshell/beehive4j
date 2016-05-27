@@ -4,11 +4,22 @@ import org.springframework.http.HttpMethod;
 
 final class InvtListByRangeInvoker extends BeehiveInvoker {
 
-    private static String ENDPOINT = 
-            Constants.BEEHIVE_API_ROOT + "invt/list/byRange";
+    private static final String PATH = "invt/list/byRange";
 
-    InvtListByRangeInvoker(BeehiveCredential credential) {
-        super(credential, ENDPOINT, HttpMethod.POST);
+    private static final HttpMethod METHOD = HttpMethod.POST;
+
+    InvtListByRangeInvoker(String api_root, BeehiveCredential credential) {
+        super(api_root, credential);
+    }
+
+    @Override
+    String getApiPath() {
+        return PATH;
+    }
+
+    @Override
+    HttpMethod getHttpMethod() {
+        return METHOD;
     }
 
     @Override

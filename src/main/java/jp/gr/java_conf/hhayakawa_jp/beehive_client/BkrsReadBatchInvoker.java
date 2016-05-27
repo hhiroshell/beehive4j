@@ -4,11 +4,22 @@ import org.springframework.http.HttpMethod;
 
 final class BkrsReadBatchInvoker extends BeehiveInvoker {
 
-    private static String ENDPOINT = 
-            Constants.BEEHIVE_API_ROOT + "bkrs/read";
+    private static final String PATH = "bkrs/read";
 
-    BkrsReadBatchInvoker(BeehiveCredential credential) {
-        super(credential, ENDPOINT, HttpMethod.POST);
+    private static final HttpMethod METHOD = HttpMethod.POST;
+
+    BkrsReadBatchInvoker(String api_root, BeehiveCredential credential) {
+        super(api_root, credential);
+    }
+
+    @Override
+    String getApiPath() {
+        return PATH;
+    }
+
+    @Override
+    HttpMethod getHttpMethod() {
+        return METHOD;
     }
 
     @Override
