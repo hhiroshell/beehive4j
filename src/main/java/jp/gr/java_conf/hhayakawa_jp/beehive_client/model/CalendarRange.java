@@ -1,13 +1,15 @@
-package jp.gr.java_conf.hhayakawa_jp.beehive_client;
+package jp.gr.java_conf.hhayakawa_jp.beehive_client.model;
 
-final class CalendarRangePayload  implements BeehiveApiPayload {
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiPayload;
+
+public final class CalendarRange  implements BeehiveApiPayload {
 
     private final String beeType = "calendarRangeQuery";
-    private final BeeIdPayload beeId;
+    private final BeeId beeId;
     private final String start;
     private final String end;
 
-    CalendarRangePayload(BeeIdPayload beeId, String start, String end) {
+    CalendarRange(BeeId beeId, String start, String end) {
         super();
         this.beeId = beeId;
         this.start = start;
@@ -18,7 +20,7 @@ final class CalendarRangePayload  implements BeehiveApiPayload {
         return beeType;
     }
 
-    public BeeIdPayload getCalendar() {
+    public BeeId getCalendar() {
         return beeId;
     }
 

@@ -1,6 +1,8 @@
-package jp.gr.java_conf.hhayakawa_jp.beehive_client;
+package jp.gr.java_conf.hhayakawa_jp.beehive_client.model;
 
-public class MeetingUpdaterPayload implements BeehiveApiPayload {
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiPayload;
+
+public class MeetingUpdater implements BeehiveApiPayload {
 
     private final String start;
     private final String end;
@@ -18,7 +20,7 @@ public class MeetingUpdaterPayload implements BeehiveApiPayload {
     private final String textDescription;
     private final String xhtmlFragmentDescription;
 
-    public MeetingUpdaterPayload(String start, String end, boolean includeOnlineConference,
+    public MeetingUpdater(String start, String end, boolean includeOnlineConference,
             OccurrenceParticipantStatus inviteeParticipantStatus, TimedTrigger inviteePrimaryClientReminderTrigger,
             Priority inviteePriority, Transparency inviteeTransparency, String locationName, OccurrenceStatus status,
             String textDescription, String xhtmlFragmentDescription) {

@@ -2,6 +2,8 @@ package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
 import org.springframework.http.HttpMethod;
 
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeIdList;
+
 final class InvtReadBatchInvoker extends BeehiveInvoker {
 
     private static final String PATH = "invt/read";
@@ -28,7 +30,7 @@ final class InvtReadBatchInvoker extends BeehiveInvoker {
         if (payload == null) {
             return false;
         }
-        if (!(payload instanceof BeeIdListPayload)) {
+        if (!(payload instanceof BeeIdList)) {
             return false;
         }
         return true;

@@ -2,6 +2,8 @@ package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
 import org.springframework.http.HttpMethod;
 
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.CalendarRange;
+
 final class InvtListByRangeInvoker extends BeehiveInvoker {
 
     private static final String PATH = "invt/list/byRange";
@@ -28,7 +30,7 @@ final class InvtListByRangeInvoker extends BeehiveInvoker {
         if (payload == null) {
             return false;
         }
-        if (!(payload instanceof CalendarRangePayload)) {
+        if (!(payload instanceof CalendarRange)) {
             return false;
         }
         return true;
