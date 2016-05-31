@@ -2,8 +2,9 @@ package jp.gr.java_conf.hhayakawa_jp.beehive_client.model;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiPayload;
 
-final class BeeId implements BeehiveApiPayload {
+public final class BeeId implements BeehiveApiPayload {
 
+    // TODO Implement the type attribute correctly.
     private final String beeType = "beeId";
     private final String id;
 

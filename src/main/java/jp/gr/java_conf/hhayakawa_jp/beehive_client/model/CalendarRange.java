@@ -9,7 +9,7 @@ public final class CalendarRange  implements BeehiveApiPayload {
     private final String start;
     private final String end;
 
-    CalendarRange(BeeId beeId, String start, String end) {
+    public CalendarRange(BeeId beeId, String start, String end) {
         super();
         this.beeId = beeId;
         this.start = start;
