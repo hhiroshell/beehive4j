@@ -2,8 +2,10 @@ package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
 import java.io.IOException;
 import java.net.HttpCookie;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -49,6 +52,10 @@ abstract class BeehiveInvoker {
                 new HttpEntity<BeehiveApiPayload>(payload, headers);
 
         RestTemplate restTemplate = new RestTemplate();
+        List<ClientHttpRequestInterceptor> interceptors = 
+                new ArrayList<ClientHttpRequestInterceptor>(1);
+        interceptors.add(new BeehiveRequestLoggingInterceptor());
+        restTemplate.setInterceptors(interceptors);
         ResponseEntity<String> result = restTemplate.exchange(
                 api_root + getApiPath() + makeUrlQueryString(),
                 getHttpMethod(), entity, String.class);
