@@ -146,14 +146,16 @@ public class BeehiveContext {
             // TODO: 認証されていない旨のエラー
         }
         switch (api) {
+            case BKRS_READ_BATCH:
+                return new BkrsReadBatchInvoker(this.api_root, this.credential);
             case INVT_CREATE:
                 return new InvtCreateInvoker(this.api_root, this.credential);
             case INVT_LIST_BYRANGE:
                 return new InvtListByRangeInvoker(this.api_root, this.credential);
             case INVT_READ_BATCH:
                 return new InvtReadBatchInvoker(this.api_root, this.credential);
-            case BKRS_READ_BATCH:
-                return new BkrsReadBatchInvoker(this.api_root, this.credential);
+            case MY_WORKSPACE:
+                return new MyWorkspaceInvoker(this.api_root, this.credential);
             default:
                 return null;
         }
