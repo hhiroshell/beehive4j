@@ -1,16 +1,18 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client.model;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiPayload;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MeetingCreator implements BeehiveApiPayload {
 
-    private final List<BeeId> calendar;
+    private final String beeType = "meetingCreator";
+    private final BeeId calendar;
     private final MeetingUpdater meetingUpdater;
     private final OccurrenceType type;
 
-    public MeetingCreator(List<BeeId> calendar, MeetingUpdater meetingUpdater,
+    public MeetingCreator(BeeId calendar, MeetingUpdater meetingUpdater,
             OccurrenceType type) {
         super();
         this.calendar = calendar;
@@ -18,7 +20,11 @@ public class MeetingCreator implements BeehiveApiPayload {
         this.type = type;
     }
 
-    public List<BeeId> getCalendar() {
+    public String getBeeType() {
+        return beeType;
+    }
+
+    public BeeId getCalendar() {
         return calendar;
     }
 

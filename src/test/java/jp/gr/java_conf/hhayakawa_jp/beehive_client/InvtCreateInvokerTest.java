@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeId;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.ChangeStatus;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingCreator;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingParticipantUpdater;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingUpdater;
@@ -34,7 +35,7 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.TriggerRelativeTo;
 public class InvtCreateInvokerTest {
 
     private static final String calendar_id =
-            "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0001DDFA21CC";
+            "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000B1A7E0450";
 
     private BeehiveContext context = null;
 
@@ -54,19 +55,21 @@ public class InvtCreateInvokerTest {
     @Test
     public void test() {
         // BeeId
-        List<BeeId> calendar = new ArrayList<BeeId>(1);
-        calendar.add(new BeeId(calendar_id));
+        BeeId calendar = new BeeId(calendar_id);
 
         // MeetingUpdater
         ZonedDateTime start = ZonedDateTime.of(
-                2016, 5, 30, 0, 0, 0, 0, ZoneId.of("Asia/Tokyo"));
+                2016, 6, 4, 12, 0, 0, 0, ZoneId.of("Asia/Tokyo"));
         ZonedDateTime end = ZonedDateTime.of(
-                2016, 5, 30, 1, 0, 0, 0, ZoneId.of("Asia/Tokyo"));
+                2016, 6, 4, 13, 0, 0, 0, ZoneId.of("Asia/Tokyo"));
+        String name = "Test String of name.";
+        ChangeStatus changeStatus = null;
+        String userCreatedOn = null;
+        String userModifiedOn = null;
         boolean includeOnlineConference = false;
         OccurrenceParticipantStatus inviteeParticipantStatus =
-                OccurrenceParticipantStatus.NEEDS_ACTION;
-        TimedTrigger inviteePrimaryClientReminderTrigger = new RelativeTrigger(
-                Duration.ofMinutes(-30).toString(), TriggerRelativeTo.START);
+                OccurrenceParticipantStatus.ACCEPTED;
+        TimedTrigger inviteePrimaryClientReminderTrigger = null;
         Priority inviteePriority = Priority.MEDIUM;
         Transparency inviteeTransparency = Transparency.TRANSPARENT;
         String locationName = "JP-OAC-CONF-17006_17M1";
@@ -75,17 +78,14 @@ public class InvtCreateInvokerTest {
         String textDescription = "Test String of testDescription.";
         String xhtmlFragmentDescription = null;
         MeetingUpdater meetingUpdater = new MeetingUpdater(
-                start.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+                name, changeStatus, userCreatedOn,
                 end.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
-                includeOnlineConference,
-                inviteeParticipantStatus,
-                inviteePrimaryClientReminderTrigger,
-                inviteePriority, inviteeTransparency,
-                locationName,
+                userModifiedOn, includeOnlineConference,
+                inviteeParticipantStatus, inviteePrimaryClientReminderTrigger,
+                inviteePriority, inviteeTransparency, locationName,
                 participantUpdaters,
-                status,
-                textDescription,
-                xhtmlFragmentDescription);
+                start.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+                status, textDescription, xhtmlFragmentDescription);
         
         // OccurenceType
         OccurrenceType type = OccurrenceType.MEETING;
