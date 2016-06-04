@@ -2,9 +2,13 @@ package jp.gr.java_conf.hhayakawa_jp.beehive_client.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public final class MeetingParticipantUpdater {
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiPayload;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public final class MeetingParticipantUpdater
+    extends BaseParticipantUpdater implements BeehiveApiPayload {
+
+    private final String beeType = "meetingParticipantUpdater";
     private final String address;
     private final String name;
     private final MeetingParticipantUpdaterOperation operation;
@@ -17,6 +21,10 @@ public final class MeetingParticipantUpdater {
         this.name = name;
         this.operation = operation;
         this.participant = participant;
+    }
+
+    public String getBeeType() {
+        return beeType;
     }
 
     public String getAddress() {

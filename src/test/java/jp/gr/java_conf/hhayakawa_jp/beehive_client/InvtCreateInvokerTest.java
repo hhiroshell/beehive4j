@@ -22,6 +22,7 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeId;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.ChangeStatus;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingCreator;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingParticipantUpdater;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingParticipantUpdaterOperation;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingUpdater;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.OccurrenceParticipantStatus;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.OccurrenceStatus;
@@ -59,9 +60,9 @@ public class InvtCreateInvokerTest {
 
         // MeetingUpdater
         ZonedDateTime start = ZonedDateTime.of(
-                2016, 6, 4, 12, 0, 0, 0, ZoneId.of("Asia/Tokyo"));
+                2016, 6, 5, 12, 0, 0, 0, ZoneId.of("Asia/Tokyo"));
         ZonedDateTime end = ZonedDateTime.of(
-                2016, 6, 4, 13, 0, 0, 0, ZoneId.of("Asia/Tokyo"));
+                2016, 6, 5, 13, 0, 0, 0, ZoneId.of("Asia/Tokyo"));
         String name = "Test String of name.";
         ChangeStatus changeStatus = null;
         String userCreatedOn = null;
@@ -73,7 +74,12 @@ public class InvtCreateInvokerTest {
         Priority inviteePriority = Priority.MEDIUM;
         Transparency inviteeTransparency = Transparency.TRANSPARENT;
         String locationName = "JP-OAC-CONF-17006_17M1";
-        List<MeetingParticipantUpdater> participantUpdaters = null;
+        List<MeetingParticipantUpdater> participantUpdaters = 
+                new ArrayList<MeetingParticipantUpdater>(1);
+        participantUpdaters.add(new MeetingParticipantUpdater(
+                "mailto:JP-OAC-CONF-17006_17M1@oracle.com", null,
+                MeetingParticipantUpdaterOperation.ADD,
+                new BeeId("334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DDD86644")));
         OccurrenceStatus status = OccurrenceStatus.TENTATIVE;
         String textDescription = "Test String of testDescription.";
         String xhtmlFragmentDescription = null;
