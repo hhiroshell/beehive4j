@@ -150,6 +150,8 @@ public class BeehiveContext {
                 return new BkrsReadBatchInvoker(this.api_root, this.credential);
             case INVT_CREATE:
                 return new InvtCreateInvoker(this.api_root, this.credential);
+            case INVT_DELETE:
+                return new InvtDeleteInvoker(this.api_root, this.credential);
             case INVT_LIST_BYRANGE:
                 return new InvtListByRangeInvoker(this.api_root, this.credential);
             case INVT_READ_BATCH:
