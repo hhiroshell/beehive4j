@@ -32,6 +32,8 @@ abstract class BeehiveInvoker {
 
     private HttpHeaders headers = new HttpHeaders();
 
+    private String pathValue = "";
+
     private Map<String, String> urlQueries = new HashMap<String, String>();
 
     private BeehiveApiPayload payload;
@@ -57,8 +59,8 @@ abstract class BeehiveInvoker {
         interceptors.add(new BeehiveRequestLoggingInterceptor());
         restTemplate.setInterceptors(interceptors);
         ResponseEntity<String> result = restTemplate.exchange(
-                api_root + getApiPath() + makeUrlQueryString(),
-                getHttpMethod(), entity, String.class);
+                makeUrlString() + makeQueryString(), getHttpMethod(), entity,
+                String.class);
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readTree(result.getBody());
     }
@@ -67,8 +69,12 @@ abstract class BeehiveInvoker {
         this.headers.setAll(headers);
     }
 
-    protected void addUrlQuery(Map<String, String> queries) {
+    protected void addQuery(Map<String, String> queries) {
         this.urlQueries.putAll(queries);
+    }
+
+    protected void setPathValue(String value) {
+        this.pathValue = value;
     }
 
     protected void setPayload(BeehiveApiPayload payload) {
@@ -98,10 +104,26 @@ abstract class BeehiveInvoker {
     private void setDefaultUrlQueries(BeehiveCredential credential) {
         Map<String, String> csrf = new HashMap<String, String>(1);
         csrf.put("anticsrf", credential.getAnticsrf());
-        addUrlQuery(csrf);
+        addQuery(csrf);
     }
- 
-    private String makeUrlQueryString() {
+
+    private String getPathValue() {
+        return this.pathValue;
+    }
+
+    private String makeUrlString() {
+        StringBuffer bf = new StringBuffer();
+        bf.append(api_root);
+        bf.append(getApiPath());
+        String pathValue = getPathValue();
+        if (pathValue.length() > 0) {
+            bf.append("/");
+            bf.append(pathValue);
+        }
+        return bf.toString();
+    }
+
+    private String makeQueryString() {
         if (urlQueries == null || urlQueries.isEmpty()) {
             return "";
         }
