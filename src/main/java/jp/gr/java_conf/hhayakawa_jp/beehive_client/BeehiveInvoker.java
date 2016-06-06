@@ -62,7 +62,11 @@ abstract class BeehiveInvoker<T extends BeehiveApiPayload> {
                 makeUrlString() + makeQueryString(), getHttpMethod(), entity,
                 String.class);
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readTree(result.getBody());
+        String body = result.getBody();
+        if (body == null || body.length() == 0) {
+            return null;
+        }
+        return mapper.readTree(body);
     }
 
     protected void addHeader(Map<String, String> headers) {
