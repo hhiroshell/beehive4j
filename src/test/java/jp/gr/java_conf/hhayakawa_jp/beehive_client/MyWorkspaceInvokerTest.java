@@ -32,8 +32,8 @@ public class MyWorkspaceInvokerTest {
 
     @Test
     public void test() {
-        BeehiveInvoker invoker = 
-                context.getInvoker(BeehiveApiDefinitions.MY_WORKSPACE);
+        MyWorkspaceInvoker invoker =
+                context.getInvoker(BeehiveApiDefinitions.TYPEDEF_MY_WORKSPACE);
         try {
             JsonNode json = invoker.invoke();
             assertNotNull(json);

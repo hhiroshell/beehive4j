@@ -26,7 +26,7 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientIllegalInvokerStateException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.ErrorDescription;
 
-abstract class BeehiveInvoker {
+abstract class BeehiveInvoker<T extends BeehiveApiPayload> {
 
     private final String api_root;
 
@@ -36,22 +36,22 @@ abstract class BeehiveInvoker {
 
     private Map<String, String> urlQueries = new HashMap<String, String>();
 
-    private BeehiveApiPayload payload;
+    private T requestPayload;
 
-    BeehiveInvoker(String api_root, BeehiveCredential credential) {
+    public BeehiveInvoker(String api_root, BeehiveCredential credential) {
         this.api_root = api_root;
         setDefaultHeaders(credential);
         setDefaultUrlQueries(credential);
     }
 
-    JsonNode invoke() throws JsonProcessingException, IOException, BeeClientException {
+    JsonNode invoke()
+            throws JsonProcessingException, IOException, BeeClientException {
         if (!isPrepared()) {
             throw new BeeClientIllegalInvokerStateException(
                     ErrorDescription.INVOKER_NOT_CORRECTLY_PREPARED);
         }
         // header, body
-        HttpEntity<BeehiveApiPayload> entity =
-                new HttpEntity<BeehiveApiPayload>(payload, headers);
+        HttpEntity<T> entity = new HttpEntity<T>(requestPayload, headers);
 
         RestTemplate restTemplate = new RestTemplate();
         List<ClientHttpRequestInterceptor> interceptors = 
@@ -77,12 +77,12 @@ abstract class BeehiveInvoker {
         this.pathValue = value;
     }
 
-    protected void setPayload(BeehiveApiPayload payload) {
-        this.payload = payload;
+    protected void setRequestPayload(T requestPayload) {
+        this.requestPayload = requestPayload;
     }
 
-    protected BeehiveApiPayload getBody() {
-        return this.payload;
+    protected T getPreparedRequestPayload() {
+        return this.requestPayload;
     }
 
     abstract boolean isPrepared();

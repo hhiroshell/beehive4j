@@ -49,9 +49,9 @@ public class InvtReadBatchInvokerTest {
                 new BeeId(calendar_id),
                 from.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
                 to.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        BeehiveInvoker invoker =
-                context.getInvoker(BeehiveApiDefinitions.INVT_LIST_BYRANGE);
-        invoker.setPayload(range);
+        InvtListByRangeInvoker invoker = context.getInvoker(
+                BeehiveApiDefinitions.TYPEDEF_INVT_LIST_BY_RANGE);
+        invoker.setRequestPayload(range);
         try {
             JsonNode json = invoker.invoke();
             invitation_ids = parseInvitaionIds(json);
@@ -68,9 +68,9 @@ public class InvtReadBatchInvokerTest {
             beeIds.add(new BeeId(id));
         }
         BeeIdList beeIdList = new BeeIdList(beeIds);
-        BeehiveInvoker invoker =
-                context.getInvoker(BeehiveApiDefinitions.INVT_READ_BATCH);
-        invoker.setPayload(beeIdList);
+        InvtReadBatchInvoker invoker = context.getInvoker(
+                BeehiveApiDefinitions.TYPEDEF_INVT_READ_BATCH);
+        invoker.setRequestPayload(beeIdList);
         try {
             JsonNode json = invoker.invoke();
             assertNotNull(json);

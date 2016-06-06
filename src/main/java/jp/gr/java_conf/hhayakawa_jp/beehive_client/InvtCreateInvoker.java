@@ -2,13 +2,15 @@ package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
 import org.springframework.http.HttpMethod;
 
-final class InvtCreateInvoker extends BeehiveInvoker {
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingCreator;
+
+final class InvtCreateInvoker extends BeehiveInvoker<MeetingCreator> {
 
     private static final String PATH = "invt";
 
     private static final HttpMethod METHOD = HttpMethod.POST;
 
-    InvtCreateInvoker(String api_root, BeehiveCredential credential) {
+    public InvtCreateInvoker(String api_root, BeehiveCredential credential) {
         super(api_root, credential);
     }
 

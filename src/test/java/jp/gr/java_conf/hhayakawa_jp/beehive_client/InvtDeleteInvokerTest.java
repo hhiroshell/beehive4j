@@ -94,9 +94,9 @@ public class InvtDeleteInvokerTest {
 
         MeetingCreator meetingCreater =
                 new MeetingCreator(calendar, meetingUpdater, type);
-        BeehiveInvoker invoker = context.getInvoker(
-                BeehiveApiDefinitions.INVT_CREATE);
-        invoker.setPayload(meetingCreater);
+        InvtCreateInvoker invoker =
+                context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_CREATE);
+        invoker.setRequestPayload(meetingCreater);
         try {
             JsonNode json = invoker.invoke();
             System.out.println(json);
@@ -109,12 +109,13 @@ public class InvtDeleteInvokerTest {
 
     @Test
     public void test() {
-        BeehiveInvoker invoker =
-                context.getInvoker(BeehiveApiDefinitions.INVT_DELETE);
+        InvtDeleteInvoker invoker =
+                context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_DELETE);
         invoker.setPathValue(invitation_id);
         try {
             JsonNode json = invoker.invoke();
             // TODO check response code or meeting does not exist.
+            assertNull(json);
         } catch (IOException | BeeClientException e) {
             System.out.println(e.getCause().getMessage());
             fail(e.getMessage());

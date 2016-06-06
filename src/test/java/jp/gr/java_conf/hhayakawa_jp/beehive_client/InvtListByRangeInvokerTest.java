@@ -45,9 +45,9 @@ public class InvtListByRangeInvokerTest {
                 new BeeId(calendar_id),
                 from.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
                 to.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        BeehiveInvoker invoker =
-                context.getInvoker(BeehiveApiDefinitions.INVT_LIST_BYRANGE);
-        invoker.setPayload(range);
+        InvtListByRangeInvoker invoker = context.getInvoker(
+                BeehiveApiDefinitions.TYPEDEF_INVT_LIST_BY_RANGE);
+        invoker.setRequestPayload(range);
         try {
             JsonNode json = invoker.invoke();
             assertNotNull(json);

@@ -1,5 +1,7 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.HttpCookie;
 import java.net.URL;
 import java.util.Arrays;
@@ -38,11 +40,6 @@ public class BeehiveContext {
         return context;
     }
 
-    /**
-     * 
-     * @throws BeeClientUnauthorizedException 
-     * @throws BeeClientHttpErrorException 
-     */
     private static BeehiveCredential login(
             String api_root, String user, String password)
             throws BeeClientHttpErrorException, BeeClientUnauthorizedException {
@@ -141,25 +138,20 @@ public class BeehiveContext {
         return false;
     }
 
-    public BeehiveInvoker getInvoker(BeehiveApiDefinitions api) {
+    public <T extends BeehiveInvoker<?>> T getInvoker(Class<T> InvokerType) {
         if (this.credential == null) {
             // TODO: 認証されていない旨のエラー
         }
-        switch (api) {
-            case BKRS_READ_BATCH:
-                return new BkrsReadBatchInvoker(this.api_root, this.credential);
-            case INVT_CREATE:
-                return new InvtCreateInvoker(this.api_root, this.credential);
-            case INVT_DELETE:
-                return new InvtDeleteInvoker(this.api_root, this.credential);
-            case INVT_LIST_BYRANGE:
-                return new InvtListByRangeInvoker(this.api_root, this.credential);
-            case INVT_READ_BATCH:
-                return new InvtReadBatchInvoker(this.api_root, this.credential);
-            case MY_WORKSPACE:
-                return new MyWorkspaceInvoker(this.api_root, this.credential);
-            default:
-                return null;
+        try {
+            Class<?>[] argTypes = {String.class, BeehiveCredential.class};
+            Constructor<T> constructor = InvokerType.getConstructor(argTypes);
+            Object[] args = {this.api_root, this.credential};
+            T invoker = constructor.newInstance(args);
+            return invoker;
+        } catch (NoSuchMethodException | SecurityException |
+                InstantiationException | IllegalAccessException |
+                IllegalArgumentException | InvocationTargetException e) {
+            throw new IllegalStateException("Failed to create a invoker.", e);
         }
     }
 

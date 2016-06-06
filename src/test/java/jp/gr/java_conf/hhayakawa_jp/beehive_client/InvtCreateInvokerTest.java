@@ -98,9 +98,9 @@ public class InvtCreateInvokerTest {
 
         MeetingCreator meetingCreater =
                 new MeetingCreator(calendar, meetingUpdater, type);
-        BeehiveInvoker invoker = context.getInvoker(
-                BeehiveApiDefinitions.INVT_CREATE);
-        invoker.setPayload(meetingCreater);
+        InvtCreateInvoker invoker =
+                context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_CREATE);
+        invoker.setRequestPayload(meetingCreater);
         try {
             JsonNode json = invoker.invoke();
             System.out.println(json);
