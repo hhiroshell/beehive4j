@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,10 +27,8 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.OccurrenceParticipantSt
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.OccurrenceStatus;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.OccurrenceType;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.Priority;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.RelativeTrigger;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.TimedTrigger;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.Transparency;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.TriggerRelativeTo;
 
 public class InvtCreateInvokerTest {
 
