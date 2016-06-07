@@ -26,13 +26,7 @@ final class InvtReadBatchInvoker extends BeehiveInvoker<BeeIdList> {
 
     @Override
     protected boolean isPrepared() {
-        BeehiveApiPayload payload = getPreparedRequestPayload();
-        if (payload == null) {
-            return false;
-        }
-        if (!(payload instanceof BeeIdList)) {
-            return false;
-        }
+        // TODO implement.
         return true;
     }
 

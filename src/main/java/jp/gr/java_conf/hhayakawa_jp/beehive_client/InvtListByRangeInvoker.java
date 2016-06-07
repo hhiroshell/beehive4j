@@ -26,13 +26,7 @@ final class InvtListByRangeInvoker extends BeehiveInvoker<CalendarRange> {
 
     @Override
     protected boolean isPrepared() {
-        BeehiveApiPayload payload = getPreparedRequestPayload();
-        if (payload == null) {
-            return false;
-        }
-        if (!(payload instanceof CalendarRange)) {
-            return false;
-        }
+        // TODO implement.
         return true;
     }
 
