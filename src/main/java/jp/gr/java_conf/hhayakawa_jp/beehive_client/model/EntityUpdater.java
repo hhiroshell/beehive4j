@@ -1,9 +1,6 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client.model;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiPayload;
-
-public abstract class EntityUpdater
-    extends IdentifiableUpdater implements BeehiveApiPayload {
+public abstract class EntityUpdater extends IdentifiableUpdater {
 
     protected final String name;
 

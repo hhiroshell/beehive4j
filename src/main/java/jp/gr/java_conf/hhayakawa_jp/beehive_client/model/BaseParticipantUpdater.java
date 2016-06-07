@@ -1,8 +1,6 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client.model;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiPayload;
-
-public class BaseParticipantUpdater implements BeehiveApiPayload {
+public class BaseParticipantUpdater {
 
     private final String beeType = "baseParticipantUpdater";
 

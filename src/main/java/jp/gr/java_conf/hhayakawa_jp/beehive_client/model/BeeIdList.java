@@ -4,10 +4,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiPayload;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class BeeIdList implements BeehiveApiPayload {
+public final class BeeIdList {
 
     private final String beeType = "beeIdList";
     private final List<BeeId> beeId;

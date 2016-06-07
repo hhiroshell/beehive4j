@@ -4,10 +4,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiPayload;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MeetingUpdater extends ArtifactUpdater implements BeehiveApiPayload {
+public class MeetingUpdater extends ArtifactUpdater {
 
     private final String beeType = "meetingUpdater";
     private final String end;
