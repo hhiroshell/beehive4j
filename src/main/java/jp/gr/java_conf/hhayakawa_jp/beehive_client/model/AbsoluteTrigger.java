@@ -5,11 +5,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AbsoluteTrigger extends TimedTrigger {
 
+    private final String beeType = "absoluteTrigger";
     private final String value;
 
     public AbsoluteTrigger(String value) {
         super();
         this.value = value;
+    }
+
+    public String getBeeType() {
+        return beeType;
     }
 
     public String getValue() {

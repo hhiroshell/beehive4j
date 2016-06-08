@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RelativeTrigger extends TimedTrigger {
 
+    private final String beeType = "relativeTrigger";
     private final String offset;
     private final TriggerRelativeTo relativeTo;
 
@@ -12,6 +13,10 @@ public class RelativeTrigger extends TimedTrigger {
         super();
         this.offset = offset;
         this.relativeTo = relativeTo;
+    }
+
+    public String getBeeType() {
+        return beeType;
     }
 
     public String getOffset() {

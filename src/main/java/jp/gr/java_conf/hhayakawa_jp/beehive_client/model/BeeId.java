@@ -8,10 +8,12 @@ public final class BeeId {
     // TODO Implement the type attribute correctly.
     private final String beeType = "beeId";
     private final String id;
+    private final String resourceType;
 
-    public BeeId(String id) {
+    public BeeId(String id, String resourceType) {
         super();
         this.id = id;
+        this.resourceType = resourceType;
     }
 
     public String getBeeType() {
@@ -20,6 +22,10 @@ public final class BeeId {
 
     public String getId() {
         return id;
+    }
+
+    public String getResourceType() {
+        return resourceType;
     }
 
     @Override
