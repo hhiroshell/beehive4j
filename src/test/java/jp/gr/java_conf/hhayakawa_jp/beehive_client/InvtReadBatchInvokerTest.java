@@ -46,7 +46,7 @@ public class InvtReadBatchInvokerTest {
         ZonedDateTime from = ZonedDateTime.now();
         ZonedDateTime to = ZonedDateTime.now().plusDays(7);
         CalendarRange range = new CalendarRange(
-                new BeeId(calendar_id),
+                new BeeId(calendar_id ,null),
                 from.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
                 to.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
         InvtListByRangeInvoker invoker = context.getInvoker(
@@ -65,7 +65,7 @@ public class InvtReadBatchInvokerTest {
     public void test() {
         List<BeeId> beeIds = new ArrayList<BeeId>();
         for (String id : invitation_ids) {
-            beeIds.add(new BeeId(id));
+            beeIds.add(new BeeId(id, null));
         }
         BeeIdList beeIdList = new BeeIdList(beeIds);
         InvtReadBatchInvoker invoker = context.getInvoker(

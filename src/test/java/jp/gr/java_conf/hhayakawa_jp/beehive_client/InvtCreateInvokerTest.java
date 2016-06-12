@@ -53,7 +53,7 @@ public class InvtCreateInvokerTest {
     @Test
     public void test() {
         // BeeId
-        BeeId calendar = new BeeId(calendar_id);
+        BeeId calendar = new BeeId(calendar_id, null);
 
         // MeetingUpdater
         ZonedDateTime start = ZonedDateTime.of(
@@ -76,7 +76,7 @@ public class InvtCreateInvokerTest {
         participantUpdaters.add(new MeetingParticipantUpdater(
                 "mailto:JP-OAC-CONF-17006_17M1@oracle.com", null,
                 MeetingParticipantUpdaterOperation.ADD,
-                new BeeId("334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DDD86644")));
+                new BeeId("334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DDD86644", null)));
         OccurrenceStatus status = OccurrenceStatus.TENTATIVE;
         String textDescription = "Test String of testDescription.";
         String xhtmlFragmentDescription = null;
