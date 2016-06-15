@@ -118,9 +118,10 @@ public class BeehiveContext {
     }
 
     private static String makeBasicAuthString(String user, String password) {
+        // TODO ユーザー名かパスワードに":"を含むケース
         String src = user.trim() + ":" + password;
         byte[] encoded = Base64.getEncoder().encode(src.getBytes());
-        return new String(encoded);
+        return "Basic " + new String(encoded);
     }
 
     private static HttpCookie parseCookie(
