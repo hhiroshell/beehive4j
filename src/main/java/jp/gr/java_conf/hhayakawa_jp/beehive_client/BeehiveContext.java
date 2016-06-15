@@ -28,36 +28,47 @@ public class BeehiveContext {
 
     private static final String BEEHIVE_API_CONTEXT_ROOT = "comb/v1/d/";
 
-    private BeehiveCredential credential = null;
+    private final BeehiveCredential credential;
 
-    private String api_root = null;
+    private final String api_root;
+
+    private BeehiveContext(String api_root, BeehiveCredential credential) {
+        this.api_root = api_root;
+        this.credential = credential;
+    }
 
     public static BeehiveContext getBeehiveContext(
             URL host, String user, String password) throws BeeClientException {
-        BeehiveContext context = new BeehiveContext();
-        context.api_root = makeApiRootString(host);
-        context.credential = login(context.api_root, user, password);
-        return context;
-    }
-
-    private static BeehiveCredential login(
-            String api_root, String user, String password)
-            throws BeeClientHttpErrorException, BeeClientUnauthorizedException {
-        if (api_root == null) {
-            throw new NullPointerException(
-                    "Destination URL is not specified.");
-        }
         if (user == null || user.length() == 0 
                 || password == null || password.length() == 0) {
             throw new NullPointerException(
                     "User name or password is not specified.");
         }
+        String basicAuthHeader = makeBasicAuthString(user, password);
+        return getBeehiveContext(host, basicAuthHeader);
+    }
 
+    public static BeehiveContext getBeehiveContext(
+            URL host, String basicAuthHeader) throws BeeClientException {
+        if (host == null) {
+            throw new NullPointerException(
+                    "Destination URL is not specified.");
+        }
+        if (basicAuthHeader == null) {
+            throw new NullPointerException(
+                    "Basic auth header is not specified.");
+        }
+        String api_root = makeApiRootString(host);
+        return new BeehiveContext(api_root, login(api_root, basicAuthHeader));
+    }
+
+    private static BeehiveCredential login(
+            String api_root, String basicAuthHeader)
+            throws BeeClientHttpErrorException, BeeClientUnauthorizedException {
         // header
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        headers.set(HttpHeaders.AUTHORIZATION,
-                "Basic " + makeBasicAuthString(user, password));
+        headers.set(HttpHeaders.AUTHORIZATION, basicAuthHeader);
         HttpEntity<String> entity = new HttpEntity<String>(headers);
 
         // invoke
