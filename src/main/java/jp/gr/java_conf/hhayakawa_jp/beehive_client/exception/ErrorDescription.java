@@ -1,7 +1,7 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client.exception;
 
 public enum ErrorDescription {
-    AUTHENTICATE_FAILED(1, "Failed to authenticate."),
+    AUTHENTICATION_FAILED(1, "Failed to authenticate."),
     INVOKER_NOT_CORRECTLY_PREPARED(2, "Invoker is not correctly prepared."),
     UNEXPECTED_HTTP_ERROR(3, "Unexpected http error.")
     ;

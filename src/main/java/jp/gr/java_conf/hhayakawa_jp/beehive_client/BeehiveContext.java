@@ -40,7 +40,7 @@ public class BeehiveContext {
             URL host, String user, String password) throws BeeClientException {
         if (user == null || user.length() == 0 
                 || password == null || password.length() == 0) {
-            throw new NullPointerException(
+            throw new IllegalArgumentException(
                     "User name or password is not specified.");
         }
         String basicAuthHeader = makeBasicAuthString(user, password);
@@ -50,11 +50,11 @@ public class BeehiveContext {
     public static BeehiveContext getBeehiveContext(
             URL host, String basicAuthHeader) throws BeeClientException {
         if (host == null) {
-            throw new NullPointerException(
+            throw new IllegalArgumentException(
                     "Destination URL is not specified.");
         }
         if (basicAuthHeader == null) {
-            throw new NullPointerException(
+            throw new IllegalArgumentException(
                     "Basic auth header is not specified.");
         }
         String api_root = makeApiRootString(host);
@@ -82,7 +82,7 @@ public class BeehiveContext {
                 HttpStatus status = ce.getStatusCode();
                 if (HttpStatus.UNAUTHORIZED.equals(status)) {
                      new BeeClientUnauthorizedException(
-                            ErrorDescription.AUTHENTICATE_FAILED, ce);
+                            ErrorDescription.AUTHENTICATION_FAILED, ce);
                 }
             }
             throw new BeeClientHttpErrorException(
@@ -117,7 +117,10 @@ public class BeehiveContext {
     }
 
     private static String makeBasicAuthString(String user, String password) {
-        // TODO ユーザー名かパスワードに":"を含むケース
+        if (user.contains(":")) {
+            throw new IllegalArgumentException(
+                    "User name must not contain \":\".");
+        }
         String src = user.trim() + ":" + password;
         byte[] encoded = Base64.getEncoder().encode(src.getBytes());
         return "Basic " + new String(encoded);
