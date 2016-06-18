@@ -23,7 +23,6 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientUnauthoriz
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.ErrorDescription;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientHttpErrorException;
 
-// TODO: Beehiveとのセッションタイムアウトを考慮する
 public class BeehiveContext {
 
     private static final String BEEHIVE_API_CONTEXT_ROOT = "comb/v1/d/";
@@ -150,20 +149,26 @@ public class BeehiveContext {
         return false;
     }
 
+    /**
+     * Get an invoker object of specified type.<br>
+     * An invoker type corresponds to one Beehive REST API.
+     * 
+     * @param InvokerType: Class object of concrete invoker object.
+     * @return An Invoker object.
+     */
     public <T extends BeehiveInvoker<?>> T getInvoker(Class<T> InvokerType) {
-        if (this.credential == null) {
-            // TODO: 認証されていない旨のエラー
-        }
         try {
             Class<?>[] argTypes = {String.class, BeehiveCredential.class};
             Constructor<T> constructor = InvokerType.getConstructor(argTypes);
+            // api_root and credential must not be null.
             Object[] args = {this.api_root, this.credential};
             T invoker = constructor.newInstance(args);
             return invoker;
         } catch (NoSuchMethodException | SecurityException |
                 InstantiationException | IllegalAccessException |
                 IllegalArgumentException | InvocationTargetException e) {
-            throw new IllegalStateException("Failed to create a invoker.", e);
+            throw new IllegalStateException(
+                    "Failed to create a invoker instance using reflection.", e);
         }
     }
 
