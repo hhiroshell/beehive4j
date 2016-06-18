@@ -137,7 +137,7 @@ public class BeehiveContext {
         }
         String[] keyValue = attributes[0].split("=");
         if (keyValue.length != 2) {
-            throw new IllegalStateException("Invalid cookie is going to bee set.");
+            throw new IllegalStateException("Invalid cookie is going to be set.");
         }
         HttpCookie cookie = new HttpCookie(
                 keyValue[0].trim(), keyValue[1].trim());
