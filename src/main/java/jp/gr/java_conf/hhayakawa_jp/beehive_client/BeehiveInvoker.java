@@ -13,9 +13,12 @@ import java.util.Set;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,7 +26,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientHttpErrorException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientIllegalInvokerStateException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientUnauthorizedException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.ErrorDescription;
 
 abstract class BeehiveInvoker<T> {
@@ -53,14 +58,30 @@ abstract class BeehiveInvoker<T> {
         // header, body
         HttpEntity<T> entity = new HttpEntity<T>(requestPayload, headers);
 
+        // logging interceptor
         RestTemplate restTemplate = new RestTemplate();
         List<ClientHttpRequestInterceptor> interceptors = 
                 new ArrayList<ClientHttpRequestInterceptor>(1);
         interceptors.add(new BeehiveRequestLoggingInterceptor());
         restTemplate.setInterceptors(interceptors);
-        ResponseEntity<String> result = restTemplate.exchange(
-                makeUrlString() + makeQueryString(), getHttpMethod(), entity,
-                String.class);
+
+        ResponseEntity<String> result = null;
+        try {
+            result = restTemplate.exchange(makeUrlString() + makeQueryString(),
+                    getHttpMethod(), entity, String.class);
+        } catch (RestClientException e) {
+            if (e instanceof HttpClientErrorException) {
+                HttpClientErrorException ce = (HttpClientErrorException)e;
+                HttpStatus status = ce.getStatusCode();
+                if (HttpStatus.UNAUTHORIZED.equals(status)) {
+                     new BeeClientUnauthorizedException(
+                            ErrorDescription.SESSION_EXPIRED, ce);
+                }
+            }
+            throw new BeeClientHttpErrorException(
+                    ErrorDescription.UNEXPECTED_HTTP_ERROR, e);
+        }
+
         ObjectMapper mapper = new ObjectMapper();
         String body = result.getBody();
         if (body == null || body.length() == 0) {

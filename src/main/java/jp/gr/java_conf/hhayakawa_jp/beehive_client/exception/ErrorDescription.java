@@ -2,8 +2,9 @@ package jp.gr.java_conf.hhayakawa_jp.beehive_client.exception;
 
 public enum ErrorDescription {
     AUTHENTICATION_FAILED(1, "Failed to authenticate."),
-    INVOKER_NOT_CORRECTLY_PREPARED(2, "Invoker is not correctly prepared."),
-    UNEXPECTED_HTTP_ERROR(3, "Unexpected http error.")
+    SESSION_EXPIRED(2, "Session is expired for some reason, such as time-out."),
+    INVOKER_NOT_CORRECTLY_PREPARED(3, "Invoker is not correctly prepared."),
+    UNEXPECTED_HTTP_ERROR(4, "Unexpected http error.")
     ;
 
     private static final String CODE_HEADER = "BEECLIENT-ERROR-";
