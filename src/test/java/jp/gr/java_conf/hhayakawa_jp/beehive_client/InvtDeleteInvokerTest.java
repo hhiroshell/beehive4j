@@ -80,13 +80,12 @@ public class InvtDeleteInvokerTest {
         String textDescription = "Test String of testDescription.";
         String xhtmlFragmentDescription = null;
         MeetingUpdater meetingUpdater = new MeetingUpdater(
-                name, changeStatus, userCreatedOn,
-                end.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
-                userModifiedOn, includeOnlineConference,
-                inviteeParticipantStatus, inviteePrimaryClientReminderTrigger,
-                inviteePriority, inviteeTransparency, locationName,
-                participantUpdaters,
-                start.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+                name, changeStatus, userCreatedOn, userModifiedOn,
+                end,
+                includeOnlineConference, inviteeParticipantStatus,
+                inviteePrimaryClientReminderTrigger, inviteePriority,
+                inviteeTransparency, locationName, participantUpdaters,
+                start,
                 status, textDescription, xhtmlFragmentDescription);
         
         // OccurenceType
