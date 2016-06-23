@@ -62,8 +62,8 @@ public class InvtCreateInvokerTest {
                 2016, 6, 5, 13, 0, 0, 0, ZoneId.of("Asia/Tokyo"));
         String name = "Test String of name.";
         ChangeStatus changeStatus = null;
-        String userCreatedOn = null;
-        String userModifiedOn = null;
+        ZonedDateTime userCreatedOn = null;
+        ZonedDateTime userModifiedOn = null;
         boolean includeOnlineConference = false;
         OccurrenceParticipantStatus inviteeParticipantStatus =
                 OccurrenceParticipantStatus.ACCEPTED;

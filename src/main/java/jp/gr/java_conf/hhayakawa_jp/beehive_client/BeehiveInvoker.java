@@ -2,6 +2,7 @@ package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
 import java.io.IOException;
 import java.net.HttpCookie;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -24,6 +27,9 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientHttpErrorException;
@@ -43,6 +49,34 @@ abstract class BeehiveInvoker<T> {
 
     private T requestPayload;
 
+    private static final ObjectReader reader;
+
+    private static final RestTemplate template = new RestTemplate();
+
+    static {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer());
+        mapper.registerModule(module);
+        reader = mapper.reader();
+
+        // converter
+        MappingJackson2HttpMessageConverter converter =
+                new MappingJackson2HttpMessageConverter();
+        converter.setObjectMapper(mapper);
+        List<HttpMessageConverter<?>> converters =
+                new ArrayList<HttpMessageConverter<?>>(1);
+        converters.add(converter);
+        template.setMessageConverters(converters);
+
+        // intercepter
+        List<ClientHttpRequestInterceptor> interceptors = 
+                new ArrayList<ClientHttpRequestInterceptor>(1);
+        interceptors.add(new BeehiveRequestLoggingInterceptor());
+        template.setInterceptors(interceptors);;
+    }
+
     public BeehiveInvoker(String api_root, BeehiveCredential credential) {
         this.api_root = api_root;
         setDefaultHeaders(credential);
@@ -55,21 +89,13 @@ abstract class BeehiveInvoker<T> {
             throw new BeeClientIllegalInvokerStateException(
                     ErrorDescription.INVOKER_NOT_CORRECTLY_PREPARED);
         }
-        // header, body
         HttpEntity<T> entity = new HttpEntity<T>(requestPayload, headers);
-
-        // logging interceptor
-        RestTemplate restTemplate = new RestTemplate();
-        List<ClientHttpRequestInterceptor> interceptors = 
-                new ArrayList<ClientHttpRequestInterceptor>(1);
-        interceptors.add(new BeehiveRequestLoggingInterceptor());
-        restTemplate.setInterceptors(interceptors);
-
         ResponseEntity<String> result = null;
         try {
-            result = restTemplate.exchange(makeUrlString() + makeQueryString(),
+            result = template.exchange(makeUrlString() + makeQueryString(),
                     getHttpMethod(), entity, String.class);
         } catch (RestClientException e) {
+            // TODO: use custom error handler
             if (e instanceof HttpClientErrorException) {
                 HttpClientErrorException ce = (HttpClientErrorException)e;
                 HttpStatus status = ce.getStatusCode();
@@ -82,12 +108,12 @@ abstract class BeehiveInvoker<T> {
                     ErrorDescription.UNEXPECTED_HTTP_ERROR, e);
         }
 
-        ObjectMapper mapper = new ObjectMapper();
         String body = result.getBody();
         if (body == null || body.length() == 0) {
             return null;
         }
-        return mapper.readTree(body);
+        System.out.println(body);
+        return reader.readTree(body);
     }
 
     protected void addHeader(Map<String, String> headers) {

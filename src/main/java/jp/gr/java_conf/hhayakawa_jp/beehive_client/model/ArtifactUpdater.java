@@ -1,18 +1,19 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client.model;
 
+import java.time.ZonedDateTime;
+
 public abstract class ArtifactUpdater extends EntityUpdater {
 
     protected final ChangeStatus changeStatus;
     // not yet supported.
     //protected final CollabPropertiesUpdater propertiesUpdater;
-    // TODO: use ZonedDateTime
-    protected final String userCreatedOn;
-    protected final String userModifiedOn;
+    protected final ZonedDateTime userCreatedOn;
+    protected final ZonedDateTime userModifiedOn;
     // not yet supported.
     //protected final CollabPropertiesUpdater viewerPropertiesUpdater;
 
     public ArtifactUpdater(String name, ChangeStatus changeStatus,
-            String userCreatedOn, String userModifiedOn) {
+            ZonedDateTime userCreatedOn, ZonedDateTime userModifiedOn) {
         super(name);
         this.changeStatus = changeStatus;
         this.userCreatedOn = userCreatedOn;
@@ -23,11 +24,11 @@ public abstract class ArtifactUpdater extends EntityUpdater {
         return changeStatus;
     }
 
-    public String getUserCreatedOn() {
+    public ZonedDateTime getUserCreatedOn() {
         return userCreatedOn;
     }
 
-    public String getUserModifiedOn() {
+    public ZonedDateTime getUserModifiedOn() {
         return userModifiedOn;
     }
 

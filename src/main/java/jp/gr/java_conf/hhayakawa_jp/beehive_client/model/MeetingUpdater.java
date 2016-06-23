@@ -1,5 +1,6 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client.model;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -8,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class MeetingUpdater extends ArtifactUpdater {
 
     private final String beeType = "meetingUpdater";
-    private final String end;
+    private final ZonedDateTime end;
     private final boolean includeOnlineConference;
     private final OccurrenceParticipantStatus inviteeParticipantStatus;
     private final TimedTrigger inviteePrimaryClientReminderTrigger;
@@ -18,7 +19,7 @@ public class MeetingUpdater extends ArtifactUpdater {
     private final Transparency inviteeTransparency;
     private final String locationName;
     private final List<MeetingParticipantUpdater> participantUpdaters;
-    private final String start;
+    private final ZonedDateTime start;
     private final OccurrenceStatus status;
     private final String textDescription;
     private final String xhtmlFragmentDescription;
@@ -27,9 +28,9 @@ public class MeetingUpdater extends ArtifactUpdater {
     public MeetingUpdater(
             String name,
             ChangeStatus changeStatus,
-            String userCreatedOn,
-            String userModifiedOn,
-            String end,
+            ZonedDateTime userCreatedOn,
+            ZonedDateTime userModifiedOn,
+            ZonedDateTime end,
             boolean includeOnlineConference,
             OccurrenceParticipantStatus inviteeParticipantStatus,
             TimedTrigger inviteePrimaryClientReminderTrigger,
@@ -37,7 +38,7 @@ public class MeetingUpdater extends ArtifactUpdater {
             Transparency inviteeTransparency,
             String locationName,
             List<MeetingParticipantUpdater> participantUpdaters,
-            String start,
+            ZonedDateTime start,
             OccurrenceStatus status,
             String textDescription,
             String xhtmlFragmentDescription) {
@@ -60,7 +61,7 @@ public class MeetingUpdater extends ArtifactUpdater {
         return beeType;
     }
 
-    public String getEnd() {
+    public ZonedDateTime getEnd() {
         return end;
     }
 
@@ -92,7 +93,7 @@ public class MeetingUpdater extends ArtifactUpdater {
         return participantUpdaters;
     }
 
-    public String getStart() {
+    public ZonedDateTime getStart() {
         return start;
     }
 
