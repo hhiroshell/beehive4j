@@ -7,12 +7,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -97,8 +98,8 @@ public class InvtDeleteInvokerTest {
                 context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_CREATE);
         invoker.setRequestPayload(meetingCreater);
         try {
-            JsonNode json = invoker.invoke();
-            System.out.println(json);
+            ResponseEntity<BeehiveResponse> response = invoker.invoke();
+            JsonNode json = response.getBody().getJson();
             invitation_id = json.get("collabId").get("id").asText();
         } catch (IOException | BeeClientException e) {
             System.out.println(e.getCause().getMessage());
@@ -112,9 +113,11 @@ public class InvtDeleteInvokerTest {
                 context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_DELETE);
         invoker.setPathValue(invitation_id);
         try {
-            JsonNode json = invoker.invoke();
-            // TODO check response code or meeting does not exist.
-            assertNull(json);
+            ResponseEntity<BeehiveResponse> response = invoker.invoke();
+            assertEquals("Response code is expected to be 204 (No Content)",
+                    HttpStatus.NO_CONTENT, response.getStatusCode());
+            assertNull("Response body is expected to be null.",
+                    response.getBody());
         } catch (IOException | BeeClientException e) {
             System.out.println(e.getCause().getMessage());
             fail(e.getMessage());

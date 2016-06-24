@@ -7,14 +7,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeId;
@@ -98,8 +97,11 @@ public class InvtCreateInvokerTest {
                 context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_CREATE);
         invoker.setRequestPayload(meetingCreater);
         try {
-            JsonNode json = invoker.invoke();
-            System.out.println(json);
+            ResponseEntity<BeehiveResponse> response = invoker.invoke();
+            assertEquals("Response code is expected to be 201 (Created)",
+                    HttpStatus.CREATED, response.getStatusCode());
+            assertEquals("BeeType is expected to be \"meeting\"",
+                    "meeting", response.getBody().getBeeType());
         } catch (IOException | BeeClientException e) {
             System.out.println(e.getCause().getMessage());
             fail(e.getMessage());

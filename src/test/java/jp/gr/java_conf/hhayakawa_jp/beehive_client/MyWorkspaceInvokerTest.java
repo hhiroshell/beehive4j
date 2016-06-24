@@ -8,8 +8,8 @@ import java.net.URL;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
 
@@ -35,9 +35,12 @@ public class MyWorkspaceInvokerTest {
         MyWorkspaceInvoker invoker =
                 context.getInvoker(BeehiveApiDefinitions.TYPEDEF_MY_WORKSPACE);
         try {
-            JsonNode json = invoker.invoke();
-            assertNotNull(json);
-            assertEquals("personalWorkspace", json.get("beeType").asText());
+            ResponseEntity<BeehiveResponse> response = invoker.invoke();
+            assertEquals("Status code is expected to be 200 (OK).",
+                    HttpStatus.OK, response.getStatusCode());
+            assertEquals(
+                    "BeeType of the resopnse is expected to be \"personalWorkspace\"",
+                    "personalWorkspace", response.getBody().getBeeType());
         } catch (IOException | BeeClientException e) {
             fail(e.getMessage());
         }

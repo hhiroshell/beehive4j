@@ -10,8 +10,8 @@ import java.time.format.DateTimeFormatter;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeId;
@@ -49,8 +49,11 @@ public class InvtListByRangeInvokerTest {
                 BeehiveApiDefinitions.TYPEDEF_INVT_LIST_BY_RANGE);
         invoker.setRequestPayload(range);
         try {
-            JsonNode json = invoker.invoke();
-            assertNotNull(json);
+            ResponseEntity<BeehiveResponse> response = invoker.invoke();
+            assertEquals("Status code is expected to be 200 (OK).",
+                    HttpStatus.OK, response.getStatusCode());
+            assertEquals("Beetype is expected to be \"listResult\"",
+                    "listResult", response.getBody().getBeeType());
         } catch (IOException | BeeClientException e) {
             System.out.println(e.getCause().getMessage());
             fail(e.getMessage());

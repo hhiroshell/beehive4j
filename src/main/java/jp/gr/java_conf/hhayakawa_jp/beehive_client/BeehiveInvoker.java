@@ -25,9 +25,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
@@ -49,17 +47,17 @@ abstract class BeehiveInvoker<T> {
 
     private T requestPayload;
 
-    private static final ObjectReader reader;
-
     private static final RestTemplate template = new RestTemplate();
 
     static {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         SimpleModule module = new SimpleModule();
-        module.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer());
+        module.addSerializer(
+                ZonedDateTime.class, new ZonedDateTimeSerializer());
+        module.addDeserializer(
+                BeehiveResponse.class, new BeehiveResponseDeserializer());
         mapper.registerModule(module);
-        reader = mapper.reader();
 
         // converter
         MappingJackson2HttpMessageConverter converter =
@@ -83,17 +81,17 @@ abstract class BeehiveInvoker<T> {
         setDefaultUrlQueries(credential);
     }
 
-    JsonNode invoke()
+    ResponseEntity<BeehiveResponse> invoke()
             throws JsonProcessingException, IOException, BeeClientException {
         if (!isPrepared()) {
             throw new BeeClientIllegalInvokerStateException(
                     ErrorDescription.INVOKER_NOT_CORRECTLY_PREPARED);
         }
         HttpEntity<T> entity = new HttpEntity<T>(requestPayload, headers);
-        ResponseEntity<String> result = null;
+        ResponseEntity<BeehiveResponse> result = null;
         try {
             result = template.exchange(makeUrlString() + makeQueryString(),
-                    getHttpMethod(), entity, String.class);
+                    getHttpMethod(), entity, BeehiveResponse.class);
         } catch (RestClientException e) {
             // TODO: use custom error handler
             if (e instanceof HttpClientErrorException) {
@@ -107,13 +105,7 @@ abstract class BeehiveInvoker<T> {
             throw new BeeClientHttpErrorException(
                     ErrorDescription.UNEXPECTED_HTTP_ERROR, e);
         }
-
-        String body = result.getBody();
-        if (body == null || body.length() == 0) {
-            return null;
-        }
-        System.out.println(body);
-        return reader.readTree(body);
+        return result;
     }
 
     protected void addHeader(Map<String, String> headers) {

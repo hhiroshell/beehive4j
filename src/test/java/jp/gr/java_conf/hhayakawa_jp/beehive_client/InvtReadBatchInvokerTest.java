@@ -12,6 +12,8 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -53,8 +55,8 @@ public class InvtReadBatchInvokerTest {
                 BeehiveApiDefinitions.TYPEDEF_INVT_LIST_BY_RANGE);
         invoker.setRequestPayload(range);
         try {
-            JsonNode json = invoker.invoke();
-            invitation_ids = parseInvitaionIds(json);
+            ResponseEntity<BeehiveResponse> response = invoker.invoke();
+            invitation_ids = parseInvitaionIds(response.getBody().getJson());
         } catch (IOException | BeeClientException e) {
             System.out.println(e.getCause().getMessage());
             fail(e.getMessage());
@@ -72,8 +74,11 @@ public class InvtReadBatchInvokerTest {
                 BeehiveApiDefinitions.TYPEDEF_INVT_READ_BATCH);
         invoker.setRequestPayload(beeIdList);
         try {
-            JsonNode json = invoker.invoke();
-            assertNotNull(json);
+            ResponseEntity<BeehiveResponse> response = invoker.invoke();
+            assertEquals("Status code is expected to be 200 (OK).",
+                    HttpStatus.OK, response.getStatusCode());
+            assertEquals("Beetype is expected to be \"list\"", "list",
+                    response.getBody().getBeeType());
         } catch (IOException | BeeClientException e) {
             // TODO cause may be null.
             System.out.println(e.getCause().getMessage());
