@@ -8,8 +8,7 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 
-public class BeehiveRequestLoggingInterceptor
-    implements ClientHttpRequestInterceptor {
+class BeehiveRequestLoggingInterceptor implements ClientHttpRequestInterceptor {
 
     private static final Logger logger = 
             Logger.getLogger(BeehiveRequestLoggingInterceptor.class.getName());
