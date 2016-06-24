@@ -23,19 +23,65 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientUnauthoriz
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.ErrorDescription;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientHttpErrorException;
 
+/**
+ * BeehiveContext represents session context with Beehive server.
+ * You can get API invokers of Beehive REST interface.
+ * 
+ * This class is the entry point of API calls. An example of usage is following.
+ * 
+ * <code>
+ *     BeehiveContext context = BeehiveContext.getBeehiveContext(
+ *            new URL("https://beehive.example.com"), "user", "password");
+ *     MyWorkspaceInvoker invoker =
+ *            context.getInvoker(BeehiveApiDefinitions.TYPEDEF_MY_WORKSPACE);
+ *     try {
+ *         JsonNode json = invoker.invoke();
+ *     } catch (BeeClientException e) {
+ *         // error handling.
+ *     } 
+ * </code>
+ * 
+ * @author hhayakaw
+ *
+ */
 public class BeehiveContext {
 
+    /**
+     * The context root of beehive REST API.
+     */
     private static final String BEEHIVE_API_CONTEXT_ROOT = "comb/v1/d/";
-
+    /**
+     * The credential of authenticated user in this context.
+     */
     private final BeehiveCredential credential;
-
+    /**
+     * The URL string of root of beehive REST API.<br>
+     * 
+     * e.g) "https://beehive.example.com/comb/v1/d/"
+     */
     private final String api_root;
 
+    // This object is not instanciable by using constructor directly.
     private BeehiveContext(String api_root, BeehiveCredential credential) {
         this.api_root = api_root;
         this.credential = credential;
     }
 
+    /**
+     * Get an object represents session context with Beehive.
+     * You can get API invokers of Beehive REST interface.
+     * 
+     * This method calls the "session/login" REST API of Beehive using specified
+     * user name and password.<br>
+     * So if the REST API call is failed, because such as incorrect user/password
+     * or connection failure, it throws BeeClietException.
+     * 
+     * @param host - URL object of destination host. e.g) "https://beehive.example.com/"
+     * @param user - user name
+     * @param password - password
+     * @return BeehiveContext that represents session context with beehive.
+     * @throws BeeClientException - When it failed to call the "session/login" of Beehive REST API.
+     */
     public static BeehiveContext getBeehiveContext(
             URL host, String user, String password) throws BeeClientException {
         if (user == null || user.length() == 0 
@@ -47,6 +93,20 @@ public class BeehiveContext {
         return getBeehiveContext(host, basicAuthHeader);
     }
 
+    /**
+     * Get an object represents session context with Beehive.
+     * You can get API invokers of Beehive REST interface.
+     * 
+     * This method calls the "session/login" REST API of Beehive using specified
+     * basic authentication http header value.<br>
+     * So if the REST API call is failed, because such as incorrect header value
+     * or connection failure, it throws BeeClietException.
+     * 
+     * @param host - URL object of destination host. e.g) "https://beehive.example.com/"
+     * @param basicAuthHeader - Basic authentication http header value. e.g) "Basic ZxCvBnMaSdFgHjKl="
+     * @return BeehiveContext that represents session context with beehive.
+     * @throws BeeClientException - When it failed to call the "session/login" of Beehive REST API.
+     */
     public static BeehiveContext getBeehiveContext(
             URL host, String basicAuthHeader) throws BeeClientException {
         if (host == null) {
@@ -148,7 +208,7 @@ public class BeehiveContext {
     }
 
     boolean isActive() {
-        // TODO: 実装
+        // TODO: implement
         return false;
     }
 
@@ -156,8 +216,8 @@ public class BeehiveContext {
      * Get an invoker object of specified type.<br>
      * An invoker type corresponds to one Beehive REST API.
      * 
-     * @param InvokerType: Class object of concrete invoker object.
-     * @return An Invoker object.
+     * @param InvokerType - Class object of concrete invoker object.
+     * @return An invoker.
      */
     public <T extends BeehiveInvoker<?>> T getInvoker(Class<T> InvokerType) {
         try {
