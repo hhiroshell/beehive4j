@@ -2,7 +2,6 @@ package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.ZonedDateTime;
@@ -17,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeId;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeIdList;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.CalendarRange;
@@ -40,7 +39,7 @@ public class InvtReadBatchInvokerTest {
         try {
             context = BeehiveContext.getBeehiveContext(
                     new URL(host), user, password);
-        } catch (MalformedURLException | BeeClientException e) {
+        } catch (MalformedURLException | Beehive4jException e) {
             fail(e.getMessage());
         }
 
@@ -57,7 +56,7 @@ public class InvtReadBatchInvokerTest {
         try {
             ResponseEntity<BeehiveResponse> response = invoker.invoke();
             invitation_ids = parseInvitaionIds(response.getBody().getJson());
-        } catch (IOException | BeeClientException e) {
+        } catch (Beehive4jException e) {
             System.out.println(e.getCause().getMessage());
             fail(e.getMessage());
         }
@@ -79,7 +78,7 @@ public class InvtReadBatchInvokerTest {
                     HttpStatus.OK, response.getStatusCode());
             assertEquals("Beetype is expected to be \"list\"", "list",
                     response.getBody().getBeeType());
-        } catch (IOException | BeeClientException e) {
+        } catch (Beehive4jException e) {
             // TODO cause may be null.
             System.out.println(e.getCause().getMessage());
             fail(e.getMessage());

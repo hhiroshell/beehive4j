@@ -1,15 +1,15 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client.exception;
 
-public class BeeClientUnauthorizedException extends BeeClientException {
+public class BeeClientUnauthorizedException extends Beehive4jException {
 
-    public BeeClientUnauthorizedException(ErrorDescription description) {
-        super(description);
-    }
-
-    public BeeClientUnauthorizedException(
-            ErrorDescription description, Throwable cause) {
-        super(description, cause);
-    }
+//    public BeeClientUnauthorizedException(ErrorDescription description) {
+//        super(description);
+//    }
+//
+//    public BeeClientUnauthorizedException(
+//            ErrorDescription description, Throwable cause) {
+//        super(description, cause);
+//    }
 
     /**
      * Serial Version UID

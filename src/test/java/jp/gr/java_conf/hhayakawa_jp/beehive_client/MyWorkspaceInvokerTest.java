@@ -2,7 +2,6 @@ package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -11,7 +10,7 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
 
 public class MyWorkspaceInvokerTest {
 
@@ -25,7 +24,7 @@ public class MyWorkspaceInvokerTest {
         try {
             context = BeehiveContext.getBeehiveContext(
                     new URL(host), user, password);
-        } catch (MalformedURLException | BeeClientException e) {
+        } catch (MalformedURLException | Beehive4jException e) {
             fail(e.getMessage());
         }
     }
@@ -41,7 +40,7 @@ public class MyWorkspaceInvokerTest {
             assertEquals(
                     "BeeType of the resopnse is expected to be \"personalWorkspace\"",
                     "personalWorkspace", response.getBody().getBeeType());
-        } catch (IOException | BeeClientException e) {
+        } catch (Beehive4jException e) {
             fail(e.getMessage());
         }
     }

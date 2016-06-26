@@ -11,17 +11,15 @@ import java.util.List;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientUnauthorizedException;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.ErrorDescription;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientHttpErrorException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveHttpClientErrorException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveUnexpectedFailureException;
 
 /**
  * BeehiveContext represents session context with Beehive server.
@@ -80,10 +78,10 @@ public class BeehiveContext {
      * @param user - user name
      * @param password - password
      * @return BeehiveContext that represents session context with beehive.
-     * @throws BeeClientException - When it failed to call the "session/login" of Beehive REST API.
+     * @throws Beehive4jException - When it failed to call the "session/login" of Beehive REST API.
      */
     public static BeehiveContext getBeehiveContext(
-            URL host, String user, String password) throws BeeClientException {
+            URL host, String user, String password) throws Beehive4jException {
         if (user == null || user.length() == 0 
                 || password == null || password.length() == 0) {
             throw new IllegalArgumentException(
@@ -105,10 +103,10 @@ public class BeehiveContext {
      * @param host - URL object of destination host. e.g) "https://beehive.example.com/"
      * @param basicAuthHeader - Basic authentication http header value. e.g) "Basic ZxCvBnMaSdFgHjKl="
      * @return BeehiveContext that represents session context with beehive.
-     * @throws BeeClientException - When it failed to call the "session/login" of Beehive REST API.
+     * @throws Beehive4jException - When it failed to call the "session/login" of Beehive REST API.
      */
     public static BeehiveContext getBeehiveContext(
-            URL host, String basicAuthHeader) throws BeeClientException {
+            URL host, String basicAuthHeader) throws Beehive4jException {
         if (host == null) {
             throw new IllegalArgumentException(
                     "Destination URL is not specified.");
@@ -123,7 +121,7 @@ public class BeehiveContext {
 
     private static BeehiveCredential login(
             String api_root, String basicAuthHeader)
-            throws BeeClientHttpErrorException, BeeClientUnauthorizedException {
+            throws BeehiveHttpClientErrorException, BeeClientUnauthorizedException {
         // header
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
@@ -137,17 +135,9 @@ public class BeehiveContext {
             result = restTemplate.exchange(api_root + "session/login",
                     HttpMethod.POST, entity, AntiCsrfToken.class);
         } catch (RestClientException e) {
-            if (e instanceof HttpClientErrorException) {
-                HttpClientErrorException ce = (HttpClientErrorException)e;
-                HttpStatus status = ce.getStatusCode();
-                if (HttpStatus.UNAUTHORIZED.equals(status)) {
-                     new BeeClientUnauthorizedException(
-                            ErrorDescription.AUTHENTICATION_FAILED, ce);
-                }
-            }
-            throw new BeeClientHttpErrorException(
-                    ErrorDescription.UNEXPECTED_HTTP_ERROR, e);
+            throw new BeehiveUnexpectedFailureException("unexpected filure.", e);
         }
+        // TODO error handling
 
         // parse session cookie
         List<String> sessionHeader = result.getHeaders().get("Set-Cookie");

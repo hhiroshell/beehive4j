@@ -2,7 +2,6 @@ package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.ZoneId;
@@ -17,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeId;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.ChangeStatus;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingCreator;
@@ -48,7 +47,7 @@ public class InvtDeleteInvokerTest {
         try {
             context = BeehiveContext.getBeehiveContext(
                     new URL(host), user, password);
-        } catch (MalformedURLException | BeeClientException e) {
+        } catch (MalformedURLException | Beehive4jException e) {
             fail(e.getMessage());
         }
 
@@ -101,7 +100,7 @@ public class InvtDeleteInvokerTest {
             ResponseEntity<BeehiveResponse> response = invoker.invoke();
             JsonNode json = response.getBody().getJson();
             invitation_id = json.get("collabId").get("id").asText();
-        } catch (IOException | BeeClientException e) {
+        } catch (Beehive4jException e) {
             System.out.println(e.getCause().getMessage());
             fail(e.getMessage());
         }
@@ -118,7 +117,7 @@ public class InvtDeleteInvokerTest {
                     HttpStatus.NO_CONTENT, response.getStatusCode());
             assertNull("Response body is expected to be null.",
                     response.getBody());
-        } catch (IOException | BeeClientException e) {
+        } catch (Beehive4jException e) {
             System.out.println(e.getCause().getMessage());
             fail(e.getMessage());
         }

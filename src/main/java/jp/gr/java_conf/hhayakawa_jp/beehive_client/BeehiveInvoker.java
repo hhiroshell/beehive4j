@@ -1,6 +1,5 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
-import java.io.IOException;
 import java.net.HttpCookie;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -15,29 +14,28 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatus.Series;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientHttpErrorException;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientIllegalInvokerStateException;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientUnauthorizedException;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.ErrorDescription;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveHttpClientErrorException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveHttpServerErrorException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveUnexpectedFailureException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.IllegalInvokerStateException;
 
 abstract class BeehiveInvoker<T> {
 
-    private final String api_root;
+    private final String apiRoot;
 
     private HttpHeaders headers = new HttpHeaders();
 
@@ -68,6 +66,9 @@ abstract class BeehiveInvoker<T> {
         converters.add(converter);
         template.setMessageConverters(converters);
 
+        // error handler
+        template.setErrorHandler(new BypassHttpErrorErrorHandler());
+
         // intercepter
         List<ClientHttpRequestInterceptor> interceptors = 
                 new ArrayList<ClientHttpRequestInterceptor>(1);
@@ -75,17 +76,17 @@ abstract class BeehiveInvoker<T> {
         template.setInterceptors(interceptors);;
     }
 
-    public BeehiveInvoker(String api_root, BeehiveCredential credential) {
-        this.api_root = api_root;
+    public BeehiveInvoker(String apiRoot, BeehiveCredential credential) {
+        this.apiRoot = apiRoot;
         setDefaultHeaders(credential);
         setDefaultUrlQueries(credential);
     }
 
-    ResponseEntity<BeehiveResponse> invoke()
-            throws JsonProcessingException, IOException, BeeClientException {
+    ResponseEntity<BeehiveResponse> invoke() throws Beehive4jException {
         if (!isPrepared()) {
-            throw new BeeClientIllegalInvokerStateException(
-                    ErrorDescription.INVOKER_NOT_CORRECTLY_PREPARED);
+//            throw new IllegalInvokerStateException(
+//                    ErrorDescription.INVOKER_NOT_CORRECTLY_PREPARED);
+            throw new IllegalInvokerStateException();
         }
         HttpEntity<T> entity = new HttpEntity<T>(requestPayload, headers);
         ResponseEntity<BeehiveResponse> result = null;
@@ -93,18 +94,14 @@ abstract class BeehiveInvoker<T> {
             result = template.exchange(makeUrlString() + makeQueryString(),
                     getHttpMethod(), entity, BeehiveResponse.class);
         } catch (RestClientException e) {
-            // TODO: use custom error handler
-            if (e instanceof HttpClientErrorException) {
-                HttpClientErrorException ce = (HttpClientErrorException)e;
-                HttpStatus status = ce.getStatusCode();
-                if (HttpStatus.UNAUTHORIZED.equals(status)) {
-                     new BeeClientUnauthorizedException(
-                            ErrorDescription.SESSION_EXPIRED, ce);
-                }
-            }
-            throw new BeeClientHttpErrorException(
-                    ErrorDescription.UNEXPECTED_HTTP_ERROR, e);
+            throw new BeehiveUnexpectedFailureException("unexpected filure.", e);
         }
+        Series series = result.getStatusCode().series();
+        if (HttpStatus.Series.CLIENT_ERROR.equals(series)) {
+            throw new BeehiveHttpClientErrorException();
+        } else if (HttpStatus.Series.CLIENT_ERROR.equals(series)) {
+            throw new BeehiveHttpServerErrorException();
+        } 
         return result;
     }
 
@@ -156,7 +153,7 @@ abstract class BeehiveInvoker<T> {
 
     private String makeUrlString() {
         StringBuffer bf = new StringBuffer();
-        bf.append(api_root);
+        bf.append(apiRoot);
         bf.append(getApiPath());
         String pathValue = getPathValue();
         if (pathValue.length() > 0) {
