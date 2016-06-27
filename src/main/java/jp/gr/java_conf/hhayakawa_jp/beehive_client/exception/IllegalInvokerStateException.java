@@ -2,14 +2,9 @@ package jp.gr.java_conf.hhayakawa_jp.beehive_client.exception;
 
 public class IllegalInvokerStateException extends Beehive4jException {
 
-//    public IllegalInvokerStateException(ErrorDescription description) {
-//        super(description);
-//    }
-//
-//    public IllegalInvokerStateException(
-//            ErrorDescription description, Throwable cause) {
-//        super(description, cause);
-//    }
+    public IllegalInvokerStateException(String message) {
+        super(message);
+    }
 
     /**
      * Serial Version UID

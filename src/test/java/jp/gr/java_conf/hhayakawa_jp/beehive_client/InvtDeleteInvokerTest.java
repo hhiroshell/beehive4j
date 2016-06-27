@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeId;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.ChangeStatus;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingCreator;
@@ -47,7 +48,7 @@ public class InvtDeleteInvokerTest {
         try {
             context = BeehiveContext.getBeehiveContext(
                     new URL(host), user, password);
-        } catch (MalformedURLException | Beehive4jException e) {
+        } catch (MalformedURLException | BeehiveApiFaultException e) {
             fail(e.getMessage());
         }
 
@@ -100,7 +101,7 @@ public class InvtDeleteInvokerTest {
             ResponseEntity<BeehiveResponse> response = invoker.invoke();
             JsonNode json = response.getBody().getJson();
             invitation_id = json.get("collabId").get("id").asText();
-        } catch (Beehive4jException e) {
+        } catch (BeehiveApiFaultException e) {
             System.out.println(e.getCause().getMessage());
             fail(e.getMessage());
         }

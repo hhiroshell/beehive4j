@@ -1,15 +1,13 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client.exception;
 
+import org.springframework.http.HttpStatus;
+
 public class BeehiveHttpClientErrorException extends BeehiveHttpErrorException {
 
-//    public BeehiveHttpClientErrorException(ErrorDescription description) {
-//        super(description);
-//    }
-//
-//    public BeehiveHttpClientErrorException(
-//            ErrorDescription description, Throwable cause) {
-//        super(description, cause);
-//    }
+    public BeehiveHttpClientErrorException(
+            String action, String reason, String effect, HttpStatus httpStatus) {
+        super(action, reason, effect, httpStatus);
+    }
 
     /**
      * Serial Version UID

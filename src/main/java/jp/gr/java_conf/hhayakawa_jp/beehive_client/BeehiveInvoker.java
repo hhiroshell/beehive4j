@@ -14,7 +14,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatus.Series;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -23,12 +22,14 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveHttpClientErrorException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveHttpErrorException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveHttpServerErrorException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveUnexpectedFailureException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.IllegalInvokerStateException;
@@ -84,9 +85,8 @@ abstract class BeehiveInvoker<T> {
 
     ResponseEntity<BeehiveResponse> invoke() throws Beehive4jException {
         if (!isPrepared()) {
-//            throw new IllegalInvokerStateException(
-//                    ErrorDescription.INVOKER_NOT_CORRECTLY_PREPARED);
-            throw new IllegalInvokerStateException();
+            throw new IllegalInvokerStateException(
+                    "Invoker is not correctly prepared.");
         }
         HttpEntity<T> entity = new HttpEntity<T>(requestPayload, headers);
         ResponseEntity<BeehiveResponse> result = null;
@@ -96,12 +96,9 @@ abstract class BeehiveInvoker<T> {
         } catch (RestClientException e) {
             throw new BeehiveUnexpectedFailureException("unexpected filure.", e);
         }
-        Series series = result.getStatusCode().series();
-        if (HttpStatus.Series.CLIENT_ERROR.equals(series)) {
-            throw new BeehiveHttpClientErrorException();
-        } else if (HttpStatus.Series.CLIENT_ERROR.equals(series)) {
-            throw new BeehiveHttpServerErrorException();
-        } 
+        if ("restFault".equals(result.getBody().getBeeType())) {
+            throwExceptionIfNecessary(result);
+        }
         return result;
     }
 
@@ -177,6 +174,24 @@ abstract class BeehiveInvoker<T> {
             bf.append(entry.getKey() + "=" + entry.getValue());
         }
         return bf.toString();
+    }
+
+    private static void throwExceptionIfNecessary(
+            ResponseEntity<BeehiveResponse> responseEntity)
+                    throws BeehiveHttpErrorException {
+        JsonNode json = responseEntity.getBody().getJson();
+        JsonNode fault = json.get("fault");
+        String action = fault.get("action").asText();
+        String cause = fault.get("cause").asText();
+        String effect = fault.get("effect").asText();
+        HttpStatus httpStatus = responseEntity.getStatusCode();
+        if (httpStatus.is4xxClientError()) {
+            throw new BeehiveHttpClientErrorException(
+                    action, cause, effect, httpStatus);
+        } else if (httpStatus.is5xxServerError()) {
+            throw new BeehiveHttpServerErrorException(
+                    action, cause, effect, httpStatus);
+        }
     }
 
 }

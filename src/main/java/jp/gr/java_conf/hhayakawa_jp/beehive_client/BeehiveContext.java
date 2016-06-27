@@ -16,8 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientUnauthorizedException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveHttpClientErrorException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveUnexpectedFailureException;
 
@@ -78,10 +77,10 @@ public class BeehiveContext {
      * @param user - user name
      * @param password - password
      * @return BeehiveContext that represents session context with beehive.
-     * @throws Beehive4jException - When it failed to call the "session/login" of Beehive REST API.
+     * @throws BeehiveApiFaultException - When it failed to call the "session/login" of Beehive REST API.
      */
     public static BeehiveContext getBeehiveContext(
-            URL host, String user, String password) throws Beehive4jException {
+            URL host, String user, String password) throws BeehiveApiFaultException {
         if (user == null || user.length() == 0 
                 || password == null || password.length() == 0) {
             throw new IllegalArgumentException(
@@ -103,10 +102,10 @@ public class BeehiveContext {
      * @param host - URL object of destination host. e.g) "https://beehive.example.com/"
      * @param basicAuthHeader - Basic authentication http header value. e.g) "Basic ZxCvBnMaSdFgHjKl="
      * @return BeehiveContext that represents session context with beehive.
-     * @throws Beehive4jException - When it failed to call the "session/login" of Beehive REST API.
+     * @throws BeehiveApiFaultException - When it failed to call the "session/login" of Beehive REST API.
      */
     public static BeehiveContext getBeehiveContext(
-            URL host, String basicAuthHeader) throws Beehive4jException {
+            URL host, String basicAuthHeader) throws BeehiveApiFaultException {
         if (host == null) {
             throw new IllegalArgumentException(
                     "Destination URL is not specified.");
@@ -121,7 +120,7 @@ public class BeehiveContext {
 
     private static BeehiveCredential login(
             String api_root, String basicAuthHeader)
-            throws BeehiveHttpClientErrorException, BeeClientUnauthorizedException {
+            throws BeehiveHttpClientErrorException {
         // header
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
