@@ -96,7 +96,8 @@ abstract class BeehiveInvoker<T> {
         } catch (RestClientException e) {
             throw new BeehiveUnexpectedFailureException("unexpected filure.", e);
         }
-        if ("restFault".equals(result.getBody().getBeeType())) {
+        BeehiveResponse response = result.getBody();
+        if (response != null && "restFault".equals(response.getBeeType())) {
             throwExceptionIfNecessary(result);
         }
         return result;
