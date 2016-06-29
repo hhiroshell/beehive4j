@@ -103,7 +103,7 @@ public class InvtCreateInvokerTest {
             assertEquals("BeeType is expected to be \"meeting\"",
                     "meeting", response.getBody().getBeeType());
         } catch (Beehive4jException e) {
-            System.out.println(e.getCause().getMessage());
+            System.out.println(e.getMessage());
             fail(e.getMessage());
         }
     }

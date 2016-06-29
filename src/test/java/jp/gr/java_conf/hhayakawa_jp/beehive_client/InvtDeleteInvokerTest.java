@@ -119,7 +119,7 @@ public class InvtDeleteInvokerTest {
             assertNull("Response body is expected to be null.",
                     response.getBody());
         } catch (Beehive4jException e) {
-            System.out.println(e.getCause().getMessage());
+            System.out.println(e.getMessage());
             fail(e.getMessage());
         }
     }
