@@ -34,7 +34,7 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveHttpServerEr
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveUnexpectedFailureException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.IllegalInvokerStateException;
 
-abstract class BeehiveInvoker<T> {
+public abstract class BeehiveInvoker<T> {
 
     private final String apiRoot;
 
