@@ -4,7 +4,7 @@ import org.springframework.http.HttpMethod;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingCreator;
 
-final class InvtCreateInvoker extends BeehiveInvoker<MeetingCreator> {
+public final class InvtCreateInvoker extends BeehiveInvoker<MeetingCreator> {
 
     private static final String PATH = "invt";
 

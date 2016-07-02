@@ -83,7 +83,7 @@ public abstract class BeehiveInvoker<T> {
         setDefaultUrlQueries(credential);
     }
 
-    ResponseEntity<BeehiveResponse> invoke() throws Beehive4jException {
+    public ResponseEntity<BeehiveResponse> invoke() throws Beehive4jException {
         if (!isPrepared()) {
             throw new IllegalInvokerStateException(
                     "Invoker is not correctly prepared.");
@@ -103,19 +103,19 @@ public abstract class BeehiveInvoker<T> {
         return result;
     }
 
-    protected void addHeader(Map<String, String> headers) {
+    public void addHeader(Map<String, String> headers) {
         this.headers.setAll(headers);
     }
 
-    protected void addQuery(Map<String, String> queries) {
+    public void addQuery(Map<String, String> queries) {
         this.urlQueries.putAll(queries);
     }
 
-    protected void setPathValue(String value) {
+    public void setPathValue(String value) {
         this.pathValue = value;
     }
 
-    protected void setRequestPayload(T requestPayload) {
+    public void setRequestPayload(T requestPayload) {
         this.requestPayload = requestPayload;
     }
 

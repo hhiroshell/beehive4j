@@ -4,7 +4,7 @@ import org.springframework.http.HttpMethod;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.CalendarRange;
 
-final class InvtListByRangeInvoker extends BeehiveInvoker<CalendarRange> {
+public final class InvtListByRangeInvoker extends BeehiveInvoker<CalendarRange> {
 
     private static final String PATH = "invt/list/byRange";
 

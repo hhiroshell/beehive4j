@@ -4,7 +4,7 @@ import org.springframework.http.HttpMethod;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeIdList;
 
-final class InvtReadBatchInvoker extends BeehiveInvoker<BeeIdList> {
+public final class InvtReadBatchInvoker extends BeehiveInvoker<BeeIdList> {
 
     private static final String PATH = "invt/read";
 
