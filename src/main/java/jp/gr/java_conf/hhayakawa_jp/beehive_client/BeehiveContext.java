@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveHttpClientErrorException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveUnexpectedFailureException;
 
@@ -77,10 +77,10 @@ public class BeehiveContext {
      * @param user - user name
      * @param password - password
      * @return BeehiveContext that represents session context with beehive.
-     * @throws BeehiveApiFaultException - When it failed to call the "session/login" of Beehive REST API.
+     * @throws Beehive4jException - When it failed to call the "session/login" of Beehive REST API.
      */
     public static BeehiveContext getBeehiveContext(
-            URL host, String user, String password) throws BeehiveApiFaultException {
+            URL host, String user, String password) throws Beehive4jException {
         if (user == null || user.length() == 0 
                 || password == null || password.length() == 0) {
             throw new IllegalArgumentException(
@@ -102,10 +102,10 @@ public class BeehiveContext {
      * @param host - URL object of destination host. e.g) "https://beehive.example.com/"
      * @param basicAuthHeader - Basic authentication http header value. e.g) "Basic ZxCvBnMaSdFgHjKl="
      * @return BeehiveContext that represents session context with beehive.
-     * @throws BeehiveApiFaultException - When it failed to call the "session/login" of Beehive REST API.
+     * @throws Beehive4jException - When it failed to call the "session/login" of Beehive REST API.
      */
     public static BeehiveContext getBeehiveContext(
-            URL host, String basicAuthHeader) throws BeehiveApiFaultException {
+            URL host, String basicAuthHeader) throws Beehive4jException {
         if (host == null) {
             throw new IllegalArgumentException(
                     "Destination URL is not specified.");

@@ -9,7 +9,7 @@ import java.net.URL;
 import org.junit.Before;
 import org.junit.Test;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
 
 public class BeehiveContextTest {
 
@@ -32,7 +32,7 @@ public class BeehiveContextTest {
             BeehiveContext context = BeehiveContext.getBeehiveContext(
                     new URL(this.host), user, password);
             assertNotNull(context);
-        } catch (MalformedURLException | BeehiveApiFaultException e) {
+        } catch (MalformedURLException | Beehive4jException e) {
             fail();
         }
     }
