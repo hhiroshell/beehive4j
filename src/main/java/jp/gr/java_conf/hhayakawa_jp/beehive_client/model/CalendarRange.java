@@ -1,5 +1,7 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client.model;
 
+import java.time.ZonedDateTime;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -7,10 +9,10 @@ public final class CalendarRange {
 
     private final String beeType = "calendarRangeQuery";
     private final BeeId beeId;
-    private final String start;
-    private final String end;
+    private final ZonedDateTime start;
+    private final ZonedDateTime end;
 
-    public CalendarRange(BeeId beeId, String start, String end) {
+    public CalendarRange(BeeId beeId, ZonedDateTime start, ZonedDateTime end) {
         super();
         this.beeId = beeId;
         this.start = start;
@@ -25,11 +27,11 @@ public final class CalendarRange {
         return beeId;
     }
 
-    public String getStart() {
+    public ZonedDateTime getStart() {
         return start;
     }
 
-    public String getEnd() {
+    public ZonedDateTime getEnd() {
         return end;
     }
 

@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,16 +45,15 @@ public class InvtReadBatchInvokerTest {
 
         // get list of invitation ids.
         ZonedDateTime from = ZonedDateTime.now();
-        ZonedDateTime to = ZonedDateTime.now().plusDays(7);
+        ZonedDateTime to = ZonedDateTime.now().plusHours(2);
         CalendarRange range = new CalendarRange(
-                new BeeId(calendar_id ,null),
-                from.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
-                to.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                new BeeId(calendar_id ,null), from, to);
         InvtListByRangeInvoker invoker = context.getInvoker(
                 BeehiveApiDefinitions.TYPEDEF_INVT_LIST_BY_RANGE);
         invoker.setRequestPayload(range);
         try {
             ResponseEntity<BeehiveResponse> response = invoker.invoke();
+            // fix null pointer exception.
             invitation_ids = parseInvitaionIds(response.getBody().getJson());
         } catch (BeehiveApiFaultException e) {
             System.out.println(e.getCause().getMessage());
@@ -75,6 +73,7 @@ public class InvtReadBatchInvokerTest {
         invoker.setRequestPayload(beeIdList);
         try {
             ResponseEntity<BeehiveResponse> response = invoker.invoke();
+            System.out.println(response.getBody().getJson().toString());
             assertEquals("Status code is expected to be 200 (OK).",
                     HttpStatus.OK, response.getStatusCode());
             assertEquals("Beetype is expected to be \"list\"", "list",

@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -42,14 +41,13 @@ public class InvtListByRangeInvokerTest {
         ZonedDateTime from = ZonedDateTime.now();
         ZonedDateTime to = ZonedDateTime.now().plusDays(7);
         CalendarRange range = new CalendarRange(
-                new BeeId(calendar_id, null),
-                from.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
-                to.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                new BeeId(calendar_id, null), from, to);
         InvtListByRangeInvoker invoker = context.getInvoker(
                 BeehiveApiDefinitions.TYPEDEF_INVT_LIST_BY_RANGE);
         invoker.setRequestPayload(range);
         try {
             ResponseEntity<BeehiveResponse> response = invoker.invoke();
+            System.out.println(response.getBody().getJson().toString());
             assertEquals("Status code is expected to be 200 (OK).",
                     HttpStatus.OK, response.getStatusCode());
             assertEquals("Beetype is expected to be \"listResult\"",
