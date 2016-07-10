@@ -24,10 +24,4 @@ public final class InvtReadBatchInvoker extends BeehiveInvoker<BeeIdList> {
         return METHOD;
     }
 
-    @Override
-    protected boolean isPrepared() {
-        // TODO implement.
-        return true;
-    }
-
 }

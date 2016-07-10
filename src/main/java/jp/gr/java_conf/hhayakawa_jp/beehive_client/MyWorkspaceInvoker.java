@@ -23,10 +23,4 @@ public final class MyWorkspaceInvoker extends BeehiveInvoker {
         return METHOD;
     }
 
-    @Override
-    boolean isPrepared() {
-        // No need to prepare.
-        return true;
-    }
-
 }

@@ -24,10 +24,4 @@ public final class InvtCreateInvoker extends BeehiveInvoker<MeetingCreator> {
         return METHOD;
     }
 
-    @Override
-    boolean isPrepared() {
-        // TODO implement
-        return true;
-    }
-
 }

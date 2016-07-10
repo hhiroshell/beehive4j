@@ -32,7 +32,6 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveHttpClientEr
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveHttpErrorException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveHttpServerErrorException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveUnexpectedFailureException;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.IllegalInvokerStateException;
 
 public abstract class BeehiveInvoker<T> {
 
@@ -84,10 +83,6 @@ public abstract class BeehiveInvoker<T> {
     }
 
     public ResponseEntity<BeehiveResponse> invoke() throws Beehive4jException {
-        if (!isPrepared()) {
-            throw new IllegalInvokerStateException(
-                    "Invoker is not correctly prepared.");
-        }
         HttpEntity<T> entity = new HttpEntity<T>(requestPayload, headers);
         ResponseEntity<BeehiveResponse> result = null;
         try {
@@ -122,8 +117,6 @@ public abstract class BeehiveInvoker<T> {
     protected T getPreparedRequestPayload() {
         return this.requestPayload;
     }
-
-    abstract boolean isPrepared();
 
     abstract String getApiPath();
 

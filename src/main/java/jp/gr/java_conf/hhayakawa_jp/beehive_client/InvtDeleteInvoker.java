@@ -23,10 +23,4 @@ public final class InvtDeleteInvoker extends BeehiveInvoker {
         return METHOD;
     }
 
-    @Override
-    boolean isPrepared() {
-        // TODO Auto-generated method stub
-        return true;
-    }
-
 }
