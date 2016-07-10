@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveHttpClientErrorException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveHttpErrorException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveHttpServerErrorException;
@@ -82,7 +82,8 @@ public abstract class BeehiveInvoker<T> {
         setDefaultUrlQueries(credential);
     }
 
-    public ResponseEntity<BeehiveResponse> invoke() throws Beehive4jException {
+    public ResponseEntity<BeehiveResponse> invoke()
+            throws BeehiveApiFaultException {
         HttpEntity<T> entity = new HttpEntity<T>(requestPayload, headers);
         ResponseEntity<BeehiveResponse> result = null;
         try {
