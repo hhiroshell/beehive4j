@@ -45,7 +45,7 @@ public class InvtReadBatchInvokerTest {
 
         // get list of invitation ids.
         ZonedDateTime from = ZonedDateTime.now();
-        ZonedDateTime to = ZonedDateTime.now().plusHours(2);
+        ZonedDateTime to = ZonedDateTime.now().plusDays(1);
         CalendarRange range = new CalendarRange(
                 new BeeId(calendar_id ,null), from, to);
         InvtListByRangeInvoker invoker = context.getInvoker(
