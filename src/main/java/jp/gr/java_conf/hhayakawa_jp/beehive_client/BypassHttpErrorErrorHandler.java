@@ -9,13 +9,10 @@ public class BypassHttpErrorErrorHandler implements ResponseErrorHandler {
 
     @Override
     public void handleError(ClientHttpResponse arg0) throws IOException {
-        // TODO Auto-generated method stub
-        System.out.println("BypassHttpErrorErrorHandler#handleError()");
     }
 
     @Override
     public boolean hasError(ClientHttpResponse arg0) throws IOException {
-        // TODO Auto-generated method stub
         return true;
     }
 
