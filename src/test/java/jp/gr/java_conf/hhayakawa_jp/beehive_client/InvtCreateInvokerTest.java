@@ -9,10 +9,13 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
@@ -35,6 +38,8 @@ public class InvtCreateInvokerTest {
             "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000B1A7E0450";
 
     private BeehiveContext context = null;
+
+    private String invitation_id = null;
 
     @Before
     public void setUp() throws Exception {
@@ -102,6 +107,21 @@ public class InvtCreateInvokerTest {
                     HttpStatus.CREATED, response.getStatusCode());
             assertEquals("BeeType is expected to be \"meeting\"",
                     "meeting", response.getBody().getBeeType());
+            JsonNode json = response.getBody().getJson();
+            invitation_id = json.get("collabId").get("id").asText();
+        } catch (Beehive4jException e) {
+            System.out.println(e.getMessage());
+            fail(e.getMessage());
+        }
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        InvtDeleteInvoker invoker =
+                context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_DELETE);
+        invoker.setPathValue(invitation_id);
+        try {
+            ResponseEntity<BeehiveResponse> response = invoker.invoke();
         } catch (Beehive4jException e) {
             System.out.println(e.getMessage());
             fail(e.getMessage());
