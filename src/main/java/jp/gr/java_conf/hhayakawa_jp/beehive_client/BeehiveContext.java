@@ -4,21 +4,15 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.HttpCookie;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveHttpClientErrorException;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveUnexpectedFailureException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
 
 /**
  * BeehiveContext represents session context with Beehive server.
@@ -77,10 +71,10 @@ public class BeehiveContext {
      * @param user - user name
      * @param password - password
      * @return BeehiveContext that represents session context with beehive.
-     * @throws Beehive4jException - When it failed to call the "session/login" of Beehive REST API.
+     * @throws BeehiveApiFaultException - When it failed to call the "session/login" of Beehive REST API.
      */
-    public static BeehiveContext getBeehiveContext(
-            URL host, String user, String password) throws Beehive4jException {
+    public static BeehiveContext getBeehiveContext(URL host, String user,
+            String password) throws BeehiveApiFaultException {
         if (user == null || user.length() == 0 
                 || password == null || password.length() == 0) {
             throw new IllegalArgumentException(
@@ -102,10 +96,10 @@ public class BeehiveContext {
      * @param host - URL object of destination host. e.g) "https://beehive.example.com/"
      * @param basicAuthHeader - Basic authentication http header value. e.g) "Basic ZxCvBnMaSdFgHjKl="
      * @return BeehiveContext that represents session context with beehive.
-     * @throws Beehive4jException - When it failed to call the "session/login" of Beehive REST API.
+     * @throws BeehiveApiFaultException - When it failed to call the "session/login" of Beehive REST API.
      */
     public static BeehiveContext getBeehiveContext(
-            URL host, String basicAuthHeader) throws Beehive4jException {
+            URL host, String basicAuthHeader) throws BeehiveApiFaultException {
         if (host == null) {
             throw new IllegalArgumentException(
                     "Destination URL is not specified.");
@@ -118,28 +112,15 @@ public class BeehiveContext {
         return new BeehiveContext(api_root, login(api_root, basicAuthHeader));
     }
 
-    private static BeehiveCredential login(
-            String api_root, String basicAuthHeader)
-            throws BeehiveHttpClientErrorException {
-        // header
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        headers.set(HttpHeaders.AUTHORIZATION, basicAuthHeader);
-        HttpEntity<String> entity = new HttpEntity<String>(headers);
+    private static BeehiveCredential login(String api_root,
+            String basicAuthHeader) throws BeehiveApiFaultException {
+        BeehiveInvoker<Object> invoker = new SessionLoginInvoker(api_root, null);
+        Map<String, String> header = new HashMap<String, String>(1);
+        header.put(HttpHeaders.AUTHORIZATION, basicAuthHeader);
+        invoker.addHeader(header);
+        ResponseEntity<BeehiveResponse> response = invoker.invoke();
 
-        // invoke
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<AntiCsrfToken> result = null;
-        try {
-            result = restTemplate.exchange(api_root + "session/login",
-                    HttpMethod.POST, entity, AntiCsrfToken.class);
-        } catch (RestClientException e) {
-            throw new BeehiveUnexpectedFailureException("unexpected filure.", e);
-        }
-        // TODO error handling
-
-        // parse session cookie
-        List<String> sessionHeader = result.getHeaders().get("Set-Cookie");
+        List<String> sessionHeader = response.getHeaders().get("Set-Cookie");
         if (sessionHeader == null || sessionHeader.size() == 0) {
             throw new IllegalStateException("Cookie is not set.");
         }
@@ -147,7 +128,14 @@ public class BeehiveContext {
         if (jsessionid == null) {
             throw new IllegalStateException("JSESSIONID is not set.");
         }
-        return new BeehiveCredential(jsessionid, result.getBody().getToken());
+
+        BeehiveResponse body = response.getBody();
+        if (body == null) {
+            // TODO
+            return null;
+        }
+        String token = body.getJson().get("token").asText();
+        return new BeehiveCredential(jsessionid, token);
     }
 
     private static String makeApiRootString(URL host) {

@@ -126,14 +126,18 @@ public abstract class BeehiveInvoker<T> {
     private void setDefaultHeaders(BeehiveCredential credential) {
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
-        Map<String, String> additionalHeaders = new HashMap<String, String>(1);
+        if (credential == null) {
+            return;
+        }
         HttpCookie sessionCookie = credential.getSession();
-        additionalHeaders.put(HttpHeaders.COOKIE,
+        headers.add(HttpHeaders.COOKIE,
                 sessionCookie.getName() + "=" + sessionCookie.getValue());
-        addHeader(additionalHeaders);
     }
 
     private void setDefaultUrlQueries(BeehiveCredential credential) {
+        if (credential == null) {
+            return;
+        }
         Map<String, String> csrf = new HashMap<String, String>(1);
         csrf.put("anticsrf", credential.getAnticsrf());
         addQuery(csrf);
