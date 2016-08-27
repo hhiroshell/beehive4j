@@ -131,8 +131,7 @@ public class BeehiveContext {
 
         BeehiveResponse body = response.getBody();
         if (body == null) {
-            // TODO
-            return null;
+            throw new IllegalStateException("Response body is null.");
         }
         String token = body.getJson().get("token").asText();
         return new BeehiveCredential(jsessionid, token);
