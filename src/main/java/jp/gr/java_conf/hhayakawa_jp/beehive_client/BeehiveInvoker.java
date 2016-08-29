@@ -1,6 +1,7 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
 import java.net.HttpCookie;
+import java.net.HttpRetryException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,6 +91,15 @@ public abstract class BeehiveInvoker<T> {
             result = template.exchange(makeUrlString() + makeQueryString(),
                     getHttpMethod(), entity, BeehiveResponse.class);
         } catch (RestClientException e) {
+            Throwable cause = e.getCause();
+            if (cause != null && cause instanceof HttpRetryException) {
+                HttpRetryException re = (HttpRetryException) cause;
+                if (HttpStatus.UNAUTHORIZED.value() == re.responseCode()) {
+                    throw new BeehiveHttpClientErrorException(
+                            null, HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                            null, HttpStatus.UNAUTHORIZED);
+                }
+            }
             throw new BeehiveUnexpectedFailureException("unexpected filure.", e);
         }
         BeehiveResponse response = result.getBody();
