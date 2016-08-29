@@ -2,8 +2,7 @@ package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
 import org.springframework.http.HttpMethod;
 
-@SuppressWarnings("rawtypes")
-public final class InvtDeleteInvoker extends BeehiveInvoker {
+public final class InvtDeleteInvoker extends BeehiveInvoker<Object> {
 
     private static final String PATH = "invt";
 

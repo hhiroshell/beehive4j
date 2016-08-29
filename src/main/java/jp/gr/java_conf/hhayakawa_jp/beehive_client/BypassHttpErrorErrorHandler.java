@@ -13,7 +13,7 @@ public class BypassHttpErrorErrorHandler implements ResponseErrorHandler {
 
     @Override
     public boolean hasError(ClientHttpResponse arg0) throws IOException {
-        return true;
+        return false;
     }
 
 }

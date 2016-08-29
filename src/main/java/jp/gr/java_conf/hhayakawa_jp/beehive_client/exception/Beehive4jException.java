@@ -6,4 +6,9 @@ public class Beehive4jException extends Exception {
         super(message);
     }
 
+    /**
+     * Serial Version UID.
+     */
+    private static final long serialVersionUID = 8819251447943846127L;
+
 }
