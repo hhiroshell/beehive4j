@@ -1,9 +1,9 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -42,15 +42,7 @@ public class InvtDeleteInvokerTest {
 
     @Before
     public void setUp() throws Exception {
-        String host = System.getProperty("beehive4j.test.host");
-        String user = System.getProperty("beehive4j.test.user");
-        String password = System.getProperty("beehive4j.test.password");
-        try {
-            context = BeehiveContext.getBeehiveContext(
-                    new URL(host), user, password);
-        } catch (MalformedURLException | BeehiveApiFaultException e) {
-            fail(e.getMessage());
-        }
+        context = TestUtils.setUpContext();
 
         // BeeId
         BeeId calendar = new BeeId(calendar_id, null);

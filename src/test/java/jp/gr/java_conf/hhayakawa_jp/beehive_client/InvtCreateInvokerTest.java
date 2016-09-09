@@ -1,9 +1,8 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeId;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.ChangeStatus;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingCreator;
@@ -43,15 +41,7 @@ public class InvtCreateInvokerTest {
 
     @Before
     public void setUp() throws Exception {
-        String host = System.getProperty("beehive4j.test.host");
-        String user = System.getProperty("beehive4j.test.user");
-        String password = System.getProperty("beehive4j.test.password");
-        try {
-            context = BeehiveContext.getBeehiveContext(
-                    new URL(host), user, password);
-        } catch (MalformedURLException | BeehiveApiFaultException e) {
-            fail(e.getMessage());
-        }
+        context = TestUtils.setUpContext();
     }
 
     @Test
@@ -121,7 +111,7 @@ public class InvtCreateInvokerTest {
                 context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_DELETE);
         invoker.setPathValue(invitation_id);
         try {
-            ResponseEntity<BeehiveResponse> response = invoker.invoke();
+            invoker.invoke();
         } catch (Beehive4jException e) {
             System.out.println(e.getMessage());
             fail(e.getMessage());

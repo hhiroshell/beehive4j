@@ -1,9 +1,8 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,19 +32,11 @@ public class InvtReadBatchInvokerTest {
     @Before
     public void setUp() throws Exception {
         // login
-        String host = System.getProperty("beehive4j.test.host");
-        String user = System.getProperty("beehive4j.test.user");
-        String password = System.getProperty("beehive4j.test.password");
-        try {
-            context = BeehiveContext.getBeehiveContext(
-                    new URL(host), user, password);
-        } catch (MalformedURLException | BeehiveApiFaultException e) {
-            fail(e.getMessage());
-        }
+        context = TestUtils.setUpContext();
 
         // get list of invitation ids.
         ZonedDateTime from = ZonedDateTime.now();
-        ZonedDateTime to = ZonedDateTime.now().plusDays(1);
+        ZonedDateTime to = ZonedDateTime.now().plusDays(4);
         CalendarRange range = new CalendarRange(
                 new BeeId(calendar_id ,null), from, to);
         InvtListByRangeInvoker invoker = context.getInvoker(

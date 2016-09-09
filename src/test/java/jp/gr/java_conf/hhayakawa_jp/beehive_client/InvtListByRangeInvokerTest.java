@@ -1,9 +1,8 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive_client;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.ZonedDateTime;
 
 import org.junit.Before;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeId;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.CalendarRange;
 
@@ -25,15 +23,7 @@ public class InvtListByRangeInvokerTest {
 
     @Before
     public void setUp() throws Exception {
-        String host = System.getProperty("beehive4j.test.host");
-        String user = System.getProperty("beehive4j.test.user");
-        String password = System.getProperty("beehive4j.test.password");
-        try {
-            context = BeehiveContext.getBeehiveContext(
-                    new URL(host), user, password);
-        } catch (MalformedURLException | BeehiveApiFaultException e) {
-            fail(e.getMessage());
-        }
+        context = TestUtils.setUpContext();
     }
 
     @Test
