@@ -66,7 +66,7 @@
                     <properties>
                         <property>
                             <name>listener</name>
-                            <value>jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveTestRunListener</value>
+                            <value>jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveTestRunListener</value>
                         </property>
                     </properties>
                 </configuration>
