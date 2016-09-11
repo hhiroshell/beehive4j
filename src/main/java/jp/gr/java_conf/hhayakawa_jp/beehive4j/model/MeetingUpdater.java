@@ -24,8 +24,112 @@ public class MeetingUpdater extends ArtifactUpdater {
     private final String textDescription;
     private final String xhtmlFragmentDescription;
 
+    public static class Builder {
 
-    public MeetingUpdater(
+        private String name;
+        private ChangeStatus changeStatus;
+        private ZonedDateTime userCreatedOn;
+        private ZonedDateTime userModifiedOn;
+        private ZonedDateTime end;
+        private boolean includeOnlineConference;
+        private OccurrenceParticipantStatus inviteeParticipantStatus;
+        private TimedTrigger inviteePrimaryClientReminderTrigger;
+        private Priority inviteePriority;
+        private Transparency inviteeTransparency;
+        private String locationName;
+        private List<MeetingParticipantUpdater> participantUpdaters;
+        private ZonedDateTime start;
+        private OccurrenceStatus status;
+        private String textDescription;
+        private String xhtmlFragmentDescription;
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder end(ZonedDateTime end) {
+            this.end = end;
+            return this;
+        }
+
+        public Builder includeOnlineConference(boolean includeOnlineConference) {
+            this.includeOnlineConference = includeOnlineConference;
+            return this;
+        }
+
+        public Builder inviteeParticipantStatus(OccurrenceParticipantStatus inviteeParticipantStatus) {
+            this.inviteeParticipantStatus = inviteeParticipantStatus;
+            return this;
+        }
+
+        public Builder inviteePrimaryClientReminderTrigger(TimedTrigger inviteePrimaryClientReminderTrigger) {
+            this.inviteePrimaryClientReminderTrigger = inviteePrimaryClientReminderTrigger;
+            return this;
+        }
+
+        public Builder inviteePriority(Priority inviteePriority) {
+            this.inviteePriority = inviteePriority;
+            return this;
+        }
+
+        public Builder inviteeTransparency(Transparency inviteeTransparency) {
+            this.inviteeTransparency = inviteeTransparency;
+            return this;
+        }
+
+        public Builder locationName(String locationName) {
+            this.locationName = locationName;
+            return this;
+        }
+
+        public Builder participantUpdaters(List<MeetingParticipantUpdater> participantUpdaters) {
+            this.participantUpdaters = participantUpdaters;
+            return this;
+        }
+
+        public Builder start(ZonedDateTime start) {
+            this.start = start;
+            return this;
+        }
+
+        public Builder status(OccurrenceStatus status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder textDescription(String textDescription) {
+            this.textDescription = textDescription;
+            return this;
+        }
+
+        public Builder xhtmlFragmentDescription(String xhtmlFragmentDescription) {
+            this.xhtmlFragmentDescription = xhtmlFragmentDescription;
+            return this;
+        }
+
+        public MeetingUpdater build() {
+            return new MeetingUpdater(
+                    this.name,
+                    this.changeStatus,
+                    this.userCreatedOn,
+                    this.userModifiedOn,
+                    this.end,
+                    this.includeOnlineConference,
+                    this.inviteeParticipantStatus,
+                    this.inviteePrimaryClientReminderTrigger,
+                    this.inviteePriority,
+                    this.inviteeTransparency,
+                    this.locationName,
+                    this.participantUpdaters,
+                    this.start,
+                    this.status,
+                    this.textDescription,
+                    this.xhtmlFragmentDescription);
+        }
+    }
+
+    private MeetingUpdater(
             String name,
             ChangeStatus changeStatus,
             ZonedDateTime userCreatedOn,

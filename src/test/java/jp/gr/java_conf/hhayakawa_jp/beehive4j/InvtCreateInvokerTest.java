@@ -91,8 +91,11 @@ public class InvtCreateInvokerTest {
         // OccurenceType
         OccurrenceType type = OccurrenceType.MEETING;
 
-        MeetingCreator meetingCreater =
-                new MeetingCreator(calendar, meetingUpdater, type);
+        MeetingCreator meetingCreater = new MeetingCreator.Builder()
+                .beeId(calendar)
+                .meetingUpdater(meetingUpdater)
+                .occurrenceType(type)
+                .build();
         InvtCreateInvoker invoker =
                 context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_CREATE);
         invoker.setRequestPayload(meetingCreater);
