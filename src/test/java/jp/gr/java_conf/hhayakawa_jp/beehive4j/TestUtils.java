@@ -5,8 +5,6 @@ import static org.junit.Assert.fail;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
@@ -14,16 +12,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveApiFaultException;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.BeeId;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.ChangeStatus;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.MeetingCreator;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.MeetingParticipantUpdater;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.MeetingParticipantUpdaterOperation;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.MeetingUpdater;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.OccurrenceParticipantStatus;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.OccurrenceStatus;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.OccurrenceType;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.Priority;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.TimedTrigger;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.Transparency;
 
 class TestUtils {
@@ -63,37 +57,19 @@ class TestUtils {
 
     static String setUpSingleMeeting(BeehiveContext context, BeeId calendar) {
         // MeetingUpdater
-        ZonedDateTime start = ZonedDateTime.now();
-        ZonedDateTime end = start.plusHours(1);
-        String name = "Test Meeting.";
-        ChangeStatus changeStatus = null;
-        ZonedDateTime userCreatedOn = null;
-        ZonedDateTime userModifiedOn = null;
-        boolean includeOnlineConference = false;
-        OccurrenceParticipantStatus inviteeParticipantStatus =
-                OccurrenceParticipantStatus.ACCEPTED;
-        TimedTrigger inviteePrimaryClientReminderTrigger = null;
-        Priority inviteePriority = Priority.MEDIUM;
-        Transparency inviteeTransparency = Transparency.TRANSPARENT;
-        String locationName = "JP-OAC-CONF-17006_17M1";
-        List<MeetingParticipantUpdater> participantUpdaters = 
-                new ArrayList<MeetingParticipantUpdater>(1);
-        participantUpdaters.add(new MeetingParticipantUpdater(
-                "mailto:JP-OAC-CONF-17006_17M1@oracle.com", null,
-                MeetingParticipantUpdaterOperation.ADD,
-                new BeeId("334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DDD86644", null)));
-        OccurrenceStatus status = OccurrenceStatus.TENTATIVE;
-        String textDescription = "Test String of testDescription.";
-        String xhtmlFragmentDescription = null;
-        MeetingUpdater meetingUpdater = new MeetingUpdater(
-                name, changeStatus, userCreatedOn, userModifiedOn,
-                end,
-                includeOnlineConference, inviteeParticipantStatus,
-                inviteePrimaryClientReminderTrigger, inviteePriority,
-                inviteeTransparency, locationName, participantUpdaters,
-                start,
-                status, textDescription, xhtmlFragmentDescription);
-        
+        MeetingUpdater meetingUpdater = new MeetingUpdater.Builder()
+                .start(ZonedDateTime.now())
+                .end(ZonedDateTime.now().plusHours(1))
+                .name("Test Meeting")
+                .includeOnlineConference(false)
+                .inviteeParticipantStatus(OccurrenceParticipantStatus.ACCEPTED)
+                .inviteePriority(Priority.MEDIUM)
+                .inviteeTransparency(Transparency.TRANSPARENT)
+                .locationName("JP-OAC-CONF-17006_17M1")
+                .status(OccurrenceStatus.TENTATIVE)
+                .textDescription("Description of test meeting.")
+                .build();
+
         // OccurenceType
         OccurrenceType type = OccurrenceType.MEETING;
 

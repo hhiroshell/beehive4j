@@ -10,9 +10,36 @@ public class MeetingCreator {
     private final MeetingUpdater meetingUpdater;
     private final OccurrenceType type;
 
-    public MeetingCreator(BeeId calendar, MeetingUpdater meetingUpdater,
-            OccurrenceType type) {
-        super();
+    public static class Builder {
+        private BeeId calendar;
+        private MeetingUpdater meetingUpdater;
+        private OccurrenceType type;
+
+        public Builder beeId(BeeId calendar) {
+            this.calendar = calendar;
+            return this;
+        }
+
+        public Builder meetingUpdater(MeetingUpdater meetingUpdater) {
+            this.meetingUpdater = meetingUpdater;
+            return this;
+        }
+
+        public Builder occurrenceType(OccurrenceType type) {
+            this.type = type;
+            return this;
+        }
+
+        public MeetingCreator build() {
+            return new MeetingCreator(
+                    this.calendar,
+                    this.meetingUpdater,
+                    this.type);
+        }
+    }
+
+    private MeetingCreator(
+            BeeId calendar, MeetingUpdater meetingUpdater, OccurrenceType type) {
         this.calendar = calendar;
         this.meetingUpdater = meetingUpdater;
         this.type = type;
