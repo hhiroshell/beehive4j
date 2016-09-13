@@ -65,7 +65,7 @@ class TestUtils {
                 .inviteeParticipantStatus(OccurrenceParticipantStatus.ACCEPTED)
                 .inviteePriority(Priority.MEDIUM)
                 .inviteeTransparency(Transparency.TRANSPARENT)
-                .locationName("JP-OAC-CONF-17006_17M1")
+                .locationName("Test Meeting Room")
                 .status(OccurrenceStatus.TENTATIVE)
                 .textDescription("Description of test meeting.")
                 .build();
@@ -87,13 +87,24 @@ class TestUtils {
             JsonNode json = response.getBody().getJson();
             invitation_id = json.get("collabId").get("id").asText();
         } catch (BeehiveApiFaultException e) {
-            System.out.println(e.getCause().getMessage());
             fail(e.getMessage());
         }
         if (invitation_id == null || invitation_id.length() == 0) {
             fail("failed to setup a meeting.");
         }
         return invitation_id;
+    }
+
+    static void tearDownSingleMeeting(
+            BeehiveContext context, String invitation_id) {
+        InvtDeleteInvoker invoker =
+                context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_DELETE);
+        invoker.setPathValue(invitation_id);
+        try {
+            invoker.invoke();
+        } catch (BeehiveApiFaultException e) {
+            fail(e.getMessage());
+        }
     }
 
     private static String getNodeAsText(JsonNode node, String... names) {

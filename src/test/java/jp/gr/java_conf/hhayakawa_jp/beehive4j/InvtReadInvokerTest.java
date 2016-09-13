@@ -47,15 +47,7 @@ public class InvtReadInvokerTest {
 
     @After
     public void tearDown() throws Exception {
-        InvtDeleteInvoker invoker =
-                context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_DELETE);
-        invoker.setPathValue(invitation_id);
-        try {
-            invoker.invoke();
-        } catch (Beehive4jException e) {
-            System.out.println(e.getMessage());
-            fail(e.getMessage());
-        }
+        TestUtils.tearDownSingleMeeting(context, invitation_id);
     }
 
 }

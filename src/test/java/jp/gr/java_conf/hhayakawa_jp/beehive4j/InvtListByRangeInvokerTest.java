@@ -47,7 +47,6 @@ public class InvtListByRangeInvokerTest {
             assertEquals("Beetype is expected to be \"listResult\"",
                     "listResult", response.getBody().getBeeType());
         } catch (Beehive4jException e) {
-            System.out.println(e.getCause().getMessage());
             fail(e.getMessage());
         }
     }
