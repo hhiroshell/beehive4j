@@ -49,10 +49,13 @@ public class InvtCreateInvokerTest {
         // MeetingUpdater
         List<MeetingParticipantUpdater> participantUpdaters = 
                 new ArrayList<MeetingParticipantUpdater>(1);
-        participantUpdaters.add(new MeetingParticipantUpdater(
-                "mailto:JP-OAC-CONF-17006_17M1@oracle.com", null,
-                MeetingParticipantUpdaterOperation.ADD,
-                new BeeId("334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DDD86644", null)));
+        MeetingParticipantUpdater meetingParticipantUpdater = 
+                new MeetingParticipantUpdater.Builder()
+                    .address("mailto:JP-OAC-CONF-17006_17M1@oracle.com")
+                    .meetingParticipantUpdaterOperation(MeetingParticipantUpdaterOperation.ADD)
+                    .beeId(new BeeId("334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DDD86644", null))
+                    .build();
+        participantUpdaters.add(meetingParticipantUpdater);
         MeetingUpdater meetingUpdater = new MeetingUpdater.Builder()
                 .start(ZonedDateTime.now())
                 .end(ZonedDateTime.now().plusHours(1))
