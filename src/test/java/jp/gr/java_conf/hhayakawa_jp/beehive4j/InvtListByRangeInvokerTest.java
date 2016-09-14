@@ -20,9 +20,6 @@ import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.CalendarRange;
 
 public class InvtListByRangeInvokerTest {
 
-    private static final String calendar_id =
-            "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0001DDFA21CC";
-
     private BeehiveContext context = null;
 
     @Before
@@ -32,10 +29,14 @@ public class InvtListByRangeInvokerTest {
 
     @Test
     public void test() {
-        ZonedDateTime from = ZonedDateTime.now();
-        ZonedDateTime to = ZonedDateTime.now().plusDays(7);
-        CalendarRange range = new CalendarRange(
-                new BeeId(calendar_id, null), from, to);
+        BeeId defaultCalendarId = new BeeId.Builder()
+                .id(TestUtils.getDefaultCalendar(context))
+                .build();
+        CalendarRange range = new CalendarRange.Builder()
+                .beeId(defaultCalendarId)
+                .start(ZonedDateTime.now())
+                .end(ZonedDateTime.now().plusDays(7))
+                .build();
         InvtListByRangeInvoker invoker = context.getInvoker(
                 BeehiveApiDefinitions.TYPEDEF_INVT_LIST_BY_RANGE);
         invoker.setRequestPayload(range);

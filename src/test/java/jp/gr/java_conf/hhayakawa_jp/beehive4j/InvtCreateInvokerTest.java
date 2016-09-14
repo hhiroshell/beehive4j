@@ -29,8 +29,10 @@ import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.Transparency;
 
 public class InvtCreateInvokerTest {
 
-    private static final String calendar_id =
-            "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000B1A7E0450";
+    private static final String PARTICIPANT_RESOURCE_ID =
+            "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DDD86644";
+    private static final String PARTICIPANT_RESOURCE_ADDRESS =
+            "mailto:JP-OAC-CONF-17006_17M1@oracle.com";
 
     private BeehiveContext context = null;
 
@@ -44,16 +46,21 @@ public class InvtCreateInvokerTest {
     @Test
     public void test() {
         // BeeId
-        BeeId calendar = new BeeId(calendar_id, null);
+        BeeId defaultCalendarId = new BeeId.Builder()
+                .id(TestUtils.getDefaultCalendar(context))
+                .build();
 
         // MeetingUpdater
         List<MeetingParticipantUpdater> participantUpdaters = 
                 new ArrayList<MeetingParticipantUpdater>(1);
+        BeeId participant_id = new BeeId.Builder()
+                .id(PARTICIPANT_RESOURCE_ID)
+                .build();
         MeetingParticipantUpdater meetingParticipantUpdater = 
                 new MeetingParticipantUpdater.Builder()
-                    .address("mailto:JP-OAC-CONF-17006_17M1@oracle.com")
+                    .address(PARTICIPANT_RESOURCE_ADDRESS)
                     .meetingParticipantUpdaterOperation(MeetingParticipantUpdaterOperation.ADD)
-                    .beeId(new BeeId("334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DDD86644", null))
+                    .beeId(participant_id)
                     .build();
         participantUpdaters.add(meetingParticipantUpdater);
         MeetingUpdater meetingUpdater = new MeetingUpdater.Builder()
@@ -74,7 +81,7 @@ public class InvtCreateInvokerTest {
         OccurrenceType type = OccurrenceType.MEETING;
 
         MeetingCreator meetingCreater = new MeetingCreator.Builder()
-                .beeId(calendar)
+                .beeId(defaultCalendarId)
                 .meetingUpdater(meetingUpdater)
                 .occurrenceType(type)
                 .build();

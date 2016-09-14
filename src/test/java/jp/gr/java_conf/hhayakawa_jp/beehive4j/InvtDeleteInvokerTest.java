@@ -21,8 +21,10 @@ public class InvtDeleteInvokerTest {
     @Before
     public void setUp() throws Exception {
         context = TestUtils.setUpContext();
-        BeeId calendar = new BeeId(TestUtils.getDefaultCalendar(context), null);
-        invitation_id = TestUtils.setUpSingleMeeting(context, calendar);
+        BeeId defaultCalendarId = new BeeId.Builder()
+                .id(TestUtils.getDefaultCalendar(context))
+                .build();
+        invitation_id = TestUtils.setUpSingleMeeting(context, defaultCalendarId);
     }
 
     @Test

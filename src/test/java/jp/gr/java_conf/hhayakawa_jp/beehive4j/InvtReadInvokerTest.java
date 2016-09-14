@@ -14,9 +14,6 @@ import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.BeeId;
 
 public class InvtReadInvokerTest {
 
-    private static final String calendar_id =
-            "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000B1A7E0450";
-
     private BeehiveContext context = null;
 
     private String invitation_id = null;
@@ -24,8 +21,10 @@ public class InvtReadInvokerTest {
     @Before
     public void setUp() throws Exception {
         context = TestUtils.setUpContext();
-        BeeId calendar = new BeeId(calendar_id, null);
-        invitation_id =  TestUtils.setUpSingleMeeting(context, calendar);
+        BeeId defaultCalendarId = new BeeId.Builder()
+                .id(TestUtils.getDefaultCalendar(context))
+                .build();
+        invitation_id = TestUtils.setUpSingleMeeting(context, defaultCalendarId);
     }
 
     @Test

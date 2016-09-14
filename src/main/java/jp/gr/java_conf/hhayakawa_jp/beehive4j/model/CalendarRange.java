@@ -12,7 +12,33 @@ public final class CalendarRange {
     private final ZonedDateTime start;
     private final ZonedDateTime end;
 
-    public CalendarRange(BeeId beeId, ZonedDateTime start, ZonedDateTime end) {
+    public static class Builder {
+        private BeeId beeId;
+        private ZonedDateTime start;
+        private ZonedDateTime end;
+
+        public Builder beeId(BeeId beeId) {
+            this.beeId = beeId;
+            return this;
+        }
+
+        public Builder start(ZonedDateTime start) {
+            this.start = start;
+            return this;
+        }
+
+        public Builder end(ZonedDateTime end) {
+            this.end = end;
+            return this;
+        }
+
+        public CalendarRange build() {
+            return new CalendarRange(beeId, start, end);
+        }
+
+    }
+
+    private CalendarRange(BeeId beeId, ZonedDateTime start, ZonedDateTime end) {
         super();
         this.beeId = beeId;
         this.start = start;

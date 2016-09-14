@@ -27,9 +27,6 @@ import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.CalendarRange;
 
 public class InvtReadBatchInvokerTest {
 
-    private static final String calendar_id =
-            "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0001DDFA21CC";
-
     private BeehiveContext context = null;
 
     private List<String> invitation_ids = null;
@@ -39,11 +36,14 @@ public class InvtReadBatchInvokerTest {
         // login
         context = TestUtils.setUpContext();
 
-        // get list of invitation ids.
-        ZonedDateTime from = ZonedDateTime.now();
-        ZonedDateTime to = ZonedDateTime.now().plusDays(4);
-        CalendarRange range = new CalendarRange(
-                new BeeId(calendar_id ,null), from, to);
+        BeeId defaultCalendarId = new BeeId.Builder()
+                .id(TestUtils.getDefaultCalendar(context))
+                .build();
+        CalendarRange range = new CalendarRange.Builder()
+                .beeId(defaultCalendarId)
+                .start(ZonedDateTime.now())
+                .end(ZonedDateTime.now().plusDays(7))
+                .build();
         InvtListByRangeInvoker invoker = context.getInvoker(
                 BeehiveApiDefinitions.TYPEDEF_INVT_LIST_BY_RANGE);
         invoker.setRequestPayload(range);
@@ -61,7 +61,7 @@ public class InvtReadBatchInvokerTest {
     public void test() {
         List<BeeId> beeIds = new ArrayList<BeeId>();
         for (String id : invitation_ids) {
-            beeIds.add(new BeeId(id, null));
+            beeIds.add(new BeeId.Builder().id(id).build());
         }
         BeeIdList beeIdList = new BeeIdList(beeIds);
         InvtReadBatchInvoker invoker = context.getInvoker(
