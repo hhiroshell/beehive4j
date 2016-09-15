@@ -7,6 +7,16 @@ public class IdentifiableUpdater {
 
     private final String beeType = "identifiableUpdater";
 
+    public static class Builder {
+
+        public IdentifiableUpdater build() {
+            return new IdentifiableUpdater();
+        }
+
+    }
+
+    protected IdentifiableUpdater() {}
+
     public String getBeeType() {
         return beeType;
     }
