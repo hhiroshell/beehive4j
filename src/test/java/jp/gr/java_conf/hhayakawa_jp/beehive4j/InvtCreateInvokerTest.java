@@ -59,7 +59,7 @@ public class InvtCreateInvokerTest {
         MeetingParticipantUpdater meetingParticipantUpdater = 
                 new MeetingParticipantUpdater.Builder()
                     .address(PARTICIPANT_RESOURCE_ADDRESS)
-                    .meetingParticipantUpdaterOperation(MeetingParticipantUpdaterOperation.ADD)
+                    .operation(MeetingParticipantUpdaterOperation.ADD)
                     .beeId(participant_id)
                     .build();
         participantUpdaters.add(meetingParticipantUpdater);
@@ -81,9 +81,9 @@ public class InvtCreateInvokerTest {
         OccurrenceType type = OccurrenceType.MEETING;
 
         MeetingCreator meetingCreater = new MeetingCreator.Builder()
-                .beeId(defaultCalendarId)
+                .calendar(defaultCalendarId)
                 .meetingUpdater(meetingUpdater)
-                .occurrenceType(type)
+                .type(type)
                 .build();
         InvtCreateInvoker invoker =
                 context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_CREATE);

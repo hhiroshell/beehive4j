@@ -74,9 +74,9 @@ class TestUtils {
         OccurrenceType type = OccurrenceType.MEETING;
 
         MeetingCreator meetingCreater = new MeetingCreator.Builder()
-                .beeId(calendar)
+                .calendar(calendar)
                 .meetingUpdater(meetingUpdater)
-                .occurrenceType(type)
+                .type(type)
                 .build();
         InvtCreateInvoker invoker =
                 context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_CREATE);

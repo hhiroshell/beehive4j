@@ -27,8 +27,7 @@ public final class MeetingParticipantUpdater extends BaseParticipantUpdater {
             return this;
         }
 
-        public Builder meetingParticipantUpdaterOperation(
-                MeetingParticipantUpdaterOperation operation) {
+        public Builder operation(MeetingParticipantUpdaterOperation operation) {
             this.operation = operation;
             return this;
         }

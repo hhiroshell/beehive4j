@@ -15,7 +15,7 @@ public class MeetingCreator {
         private MeetingUpdater meetingUpdater;
         private OccurrenceType type;
 
-        public Builder beeId(BeeId calendar) {
+        public Builder calendar(BeeId calendar) {
             this.calendar = calendar;
             return this;
         }
@@ -25,7 +25,7 @@ public class MeetingCreator {
             return this;
         }
 
-        public Builder occurrenceType(OccurrenceType type) {
+        public Builder type(OccurrenceType type) {
             this.type = type;
             return this;
         }
