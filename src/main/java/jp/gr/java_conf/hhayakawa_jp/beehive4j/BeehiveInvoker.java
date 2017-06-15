@@ -1,38 +1,24 @@
 package jp.gr.java_conf.hhayakawa_jp.beehive4j;
 
-import java.net.HttpCookie;
-import java.net.HttpRetryException;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.*;
+import org.springframework.http.*;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveApiFaultException;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveHttpClientErrorException;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveHttpErrorException;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveHttpServerErrorException;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveUnexpectedFailureException;
+import java.net.HttpCookie;
+import java.net.HttpRetryException;
+import java.net.UnknownHostException;
+import java.time.ZonedDateTime;
+import java.util.*;
+import java.util.Map.Entry;
 
 public abstract class BeehiveInvoker<T> {
 
@@ -83,27 +69,24 @@ public abstract class BeehiveInvoker<T> {
         setDefaultUrlQueries(credential);
     }
 
-    public ResponseEntity<BeehiveResponse> invoke()
-            throws BeehiveApiFaultException {
-        HttpEntity<T> entity = new HttpEntity<T>(requestPayload, headers);
-        ResponseEntity<BeehiveResponse> result = null;
+    public ResponseEntity<BeehiveResponse> invoke() throws BeehiveApiFaultException {
+        HttpEntity<T> entity = new HttpEntity<>(requestPayload, headers);
+        ResponseEntity<BeehiveResponse> result;
         try {
-            result = template.exchange(makeUrlString() + makeQueryString(),
-                    getHttpMethod(), entity, BeehiveResponse.class);
+            result = template.exchange(makeUrlString() + makeQueryString(), getHttpMethod(),
+                    entity, BeehiveResponse.class);
         } catch (RestClientException e) {
-            Throwable cause = e.getCause();
-            if (cause != null && cause instanceof HttpRetryException) {
-                HttpRetryException re = (HttpRetryException) cause;
-                if (HttpStatus.UNAUTHORIZED.value() == re.responseCode()) {
-                    throw new BeehiveHttpClientErrorException(
-                            null, HttpStatus.UNAUTHORIZED.getReasonPhrase(),
-                            null, HttpStatus.UNAUTHORIZED);
-                }
-            }
-            throw new BeehiveUnexpectedFailureException("unexpected filure.", e);
+            /*
+             * Could not reach logic of the beehive.
+             */
+            throw makeBeehiveApiFaultException(e);
         }
         BeehiveResponse response = result.getBody();
         if (response != null && "restFault".equals(response.getBeeType())) {
+            /*
+             * Reached logic of the beehive,
+             * and got a error response that the logic created.
+             */
             throwExceptionIfNecessary(result);
         }
         return result;
@@ -185,6 +168,32 @@ public abstract class BeehiveInvoker<T> {
         return bf.toString();
     }
 
+    private BeehiveApiFaultException makeBeehiveApiFaultException(RestClientException e) {
+        if (e instanceof ResourceAccessException) {
+            Throwable cause = e.getCause();
+            if (cause != null && cause instanceof HttpRetryException) {
+                if (HttpStatus.UNAUTHORIZED.value() == ((HttpRetryException) cause).responseCode()) {
+                    /*
+                     * Incorrect username or password,
+                     * or maybe current beehive context is expired.
+                     */
+                    return new BeehiveUnauthorizedException("Unauthorized.", e);
+                }
+            }
+            if (cause != null && cause instanceof UnknownHostException) {
+                /*
+                 * Unknown host.
+                 */
+                return new BeehiveUnknownHostException("Unknown host.", e);
+            }
+            /*
+             * Other I/O errors.
+             */
+            return new BeehiveResourceAccessException("I/O error.", e);
+        }
+        throw new BeehiveApiUnexpectedFaultException("unexpected failure.", e);
+    }
+
     private static void throwExceptionIfNecessary(
             ResponseEntity<BeehiveResponse> responseEntity)
                     throws BeehiveHttpErrorException {
@@ -195,11 +204,9 @@ public abstract class BeehiveInvoker<T> {
         String effect = fault.get("effect").asText();
         HttpStatus httpStatus = responseEntity.getStatusCode();
         if (httpStatus.is4xxClientError()) {
-            throw new BeehiveHttpClientErrorException(
-                    action, cause, effect, httpStatus);
+            throw new BeehiveHttpClientErrorException(action, cause, effect, httpStatus);
         } else if (httpStatus.is5xxServerError()) {
-            throw new BeehiveHttpServerErrorException(
-                    action, cause, effect, httpStatus);
+            throw new BeehiveHttpServerErrorException(action, cause, effect, httpStatus);
         }
     }
 

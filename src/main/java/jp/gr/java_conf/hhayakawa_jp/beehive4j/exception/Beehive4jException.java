@@ -6,6 +6,10 @@ public class Beehive4jException extends Exception {
         super(message);
     }
 
+    public Beehive4jException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     /**
      * Serial Version UID.
      */
