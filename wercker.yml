@@ -1,11 +1,9 @@
 build:
   box: maven:3.6.0-jdk-11-slim
   steps:
-    - script:
-      name: update ca certificates
-      code: sudo update-ca-certificates -f
     - wercker/maven:
       name: mvn clean
       goals: clean package
       settings: mvn-settings.xml
       maven_opts: -Dbeehive4j.test.host=https://$BEEHIVE4J_TEST_HOST/ -Dbeehive4j.test.user=$BEEHIVE4J_TEST_USER -Dbeehive4j.test.password="$BEEHIVE4J_TEST_PASSWORD"
+      profiles: securecentral
