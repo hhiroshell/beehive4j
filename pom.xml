@@ -13,7 +13,17 @@
     <properties>
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <github.repo.directory>${project.build.directory}/mvn-repo</github.repo.directory>
+        <github.global.server>github</github.global.server>
     </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>internal.repo</id>
+            <name>Local Github Pages</name>
+            <url>file://${github.repo.directory}</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -70,6 +80,31 @@
                         </property>
                     </properties>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.12</version>
+                <configuration>
+                    <skip>${env.CI}</skip>
+                    <message>Maven artifacts for beehive4j:${project.version}</message>
+                    <noJekyll>true</noJekyll>
+                    <outputDirectory>${github.repo.directory}</outputDirectory>
+                    <branch>refs/heads/mvn-repo</branch>
+                    <includes>
+                        <include>**/*</include>
+                    </includes>
+                    <repositoryName>hhiroshell.github.io</repositoryName>
+                    <repositoryOwner>hhiroshell</repositoryOwner>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
