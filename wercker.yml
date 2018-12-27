@@ -1,5 +1,5 @@
 build:
-  box: maven:3.6.0-jdk-11-slim
+  box: maven:3.6.0-jdk-11
   steps:
     - wercker/maven:
       goals: clean package
