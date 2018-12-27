@@ -79,6 +79,11 @@
                             <value>jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveTestRunListener</value>
                         </property>
                     </properties>
+                    <systemPropertyVariables> 
+                        <beehive4j.test.host>${env.BEEHIVE4J_TEST_HOST}</beehive4j.test.host>
+                        <beehive4j.test.user>${env.BEEHIVE4J_TEST_USER}</beehive4j.test.user>
+                        <beehive4j.test.password>${env.BEEHIVE4J_TEST_PASSWORD}</beehive4j.test.password>
+                    </systemPropertyVariables> 
                 </configuration>
             </plugin>
             <plugin>

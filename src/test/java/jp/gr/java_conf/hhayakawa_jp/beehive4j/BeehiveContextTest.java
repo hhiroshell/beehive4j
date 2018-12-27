@@ -22,9 +22,9 @@ public class BeehiveContextTest {
 
     @Before
     public void loadTestProperties() {
-        host = System.getProperty("BEEHIVE4J_TEST_HOST");
-        user = System.getProperty("BEEHIVE4J_TEST_USER");
-        password = System.getProperty("BEEHIVE4J_TEST_PASSWORD");
+        host = System.getProperty("beehive4j.test.host");
+        user = System.getProperty("beehive4j.test.user");
+        password = System.getProperty("beehive4j.test.password");
     }
 
     @Test

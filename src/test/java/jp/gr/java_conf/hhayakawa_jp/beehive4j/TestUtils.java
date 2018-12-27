@@ -23,9 +23,9 @@ import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.Transparency;
 class TestUtils {
 
     static final BeehiveContext setUpContext() {
-        String host = System.getProperty("BEEHIVE4J_TEST_HOST");
-        String user = System.getProperty("BEEHIVE4J_TEST_USER");
-        String password = System.getProperty("BEEHIVE4J_TEST_PASSWORD");
+        String host = System.getProperty("beehive4j.test.host");
+        String user = System.getProperty("beehive4j.test.user");
+        String password = System.getProperty("beehive4j.test.password");
         BeehiveContext context = null;
         try {
             context = BeehiveContext.getBeehiveContext(
