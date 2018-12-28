@@ -3,18 +3,15 @@ box: maven:3.6.0-jdk-11-slim
 build:
   steps:
     - wercker/maven:
-      name: test and build (mvn clean deploy)
-      goals: clean deploy
-      settings: mvn-settings.xml
-      profiles: securecentral
+        name: test and build (mvn clean deploy)
+        goals: clean deploy
+        settings: mvn-settings.xml
+        profiles: securecentral
 
-deploy:
+release:
   steps:
-    - script:
-      name: debug
-      code: ls
     - wercker/maven:
-      name: update artifact (mvn site:site)
-      goals: site:site
-      settings: mvn-settings.xml
-      profiles: securecentral
+        name: update remote artifacts (mvn site:site)
+        goals: site:site
+        settings: mvn-settings.xml
+        profiles: securecentral
