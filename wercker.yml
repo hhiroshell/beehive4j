@@ -1,11 +1,17 @@
+box: maven:3.6.0-jdk-11-slim
+
 build:
-  box: maven:3.6.0-jdk-11-slim
   steps:
-    - script:
-      name: debug
-      code: env
     - wercker/maven:
-      name: mvn clean package
+      name: test and build (mvn clean package)
       goals: clean package
+      settings: mvn-settings.xml
+      profiles: securecentral
+
+deploy:
+  steps:
+    - wercker/maven:
+      name: update artifact (mvn site:site)
+      goals: site:site
       settings: mvn-settings.xml
       profiles: securecentral
