@@ -12,7 +12,7 @@ deploy:
   steps:
     - script:
       name: debug
-      code: ls build
+      code: ls
     - wercker/maven:
       name: update artifact (mvn site:site)
       goals: site:site
