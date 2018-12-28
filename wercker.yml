@@ -3,8 +3,8 @@ box: maven:3.6.0-jdk-11-slim
 build:
   steps:
     - wercker/maven:
-      name: test and build (mvn clean package)
-      goals: clean package
+      name: test and build (mvn clean deploy)
+      goals: clean deploy
       settings: mvn-settings.xml
       profiles: securecentral
 
