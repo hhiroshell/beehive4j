@@ -5,7 +5,7 @@
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>jp.gr.java_conf.hhayakawa_jp</groupId>
+    <groupId>jp.gr.java_conf.hhiroshell</groupId>
     <artifactId>beehive4j</artifactId>
     <packaging>jar</packaging>
     <version>0.1</version>
@@ -76,7 +76,7 @@
                     <properties>
                         <property>
                             <name>listener</name>
-                            <value>jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveTestRunListener</value>
+                            <value>jp.gr.java_conf.hhiroshell.beehive4j.BeehiveTestRunListener</value>
                         </property>
                     </properties>
                     <systemPropertyVariables> 

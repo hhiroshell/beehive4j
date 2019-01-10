@@ -8,7 +8,7 @@ build:
         settings: mvn-settings.xml
         profiles: securecentral
 
-release:
+publish:
   steps:
     - wercker/maven:
         name: update remote artifacts (mvn site:site)
