@@ -57,9 +57,10 @@ class TestUtils {
 
     static String setUpSingleMeeting(BeehiveContext context, BeeId calendar) {
         // MeetingUpdater
+        ZonedDateTime start = ZonedDateTime.now().plusDays(1).withHour(9).withMinute(0);
         MeetingUpdater meetingUpdater = new MeetingUpdater.Builder()
-                .start(ZonedDateTime.now())
-                .end(ZonedDateTime.now().plusHours(1))
+                .start(start)
+                .end(start.plusHours(1))
                 .name("Test Meeting")
                 .includeOnlineConference(false)
                 .inviteeParticipantStatus(OccurrenceParticipantStatus.ACCEPTED)
