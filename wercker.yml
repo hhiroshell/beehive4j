@@ -1,4 +1,4 @@
-box: openjdk:8-jdk
+box: maven:3.5.2-jdk-8
 
 build:
   steps:
@@ -7,7 +7,6 @@ build:
         goals: clean deploy
         settings: mvn-settings.xml
         profiles: securecentral
-        version: 3.5.2
 
 release:
   steps:
@@ -16,4 +15,3 @@ release:
         goals: site:site
         settings: mvn-settings.xml
         profiles: securecentral
-        version: 3.5.2
