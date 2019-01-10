@@ -1,4 +1,4 @@
-box: maven:3.6.0-jdk-8-slim
+box: maven:3.6.0-jdk-8
 
 build:
   steps:
