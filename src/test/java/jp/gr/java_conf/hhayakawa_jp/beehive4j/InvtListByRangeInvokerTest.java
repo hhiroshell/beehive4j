@@ -42,7 +42,6 @@ public class InvtListByRangeInvokerTest {
         invoker.setRequestPayload(range);
         try {
             ResponseEntity<BeehiveResponse> response = invoker.invoke();
-            System.out.println(response.getBody().getJson().toString());
             assertEquals("Status code is expected to be 200 (OK).",
                     HttpStatus.OK, response.getStatusCode());
             assertEquals("Beetype is expected to be \"listResult\"",
