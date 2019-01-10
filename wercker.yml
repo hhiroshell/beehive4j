@@ -1,4 +1,4 @@
-box: maven:3.6.0-jdk-8
+box: openjdk:8-jdk-slim
 
 build:
   steps:
@@ -7,6 +7,7 @@ build:
         goals: clean deploy
         settings: mvn-settings.xml
         profiles: securecentral
+        version: 3.6.0
 
 release:
   steps:
@@ -15,3 +16,4 @@ release:
         goals: site:site
         settings: mvn-settings.xml
         profiles: securecentral
+        version: 3.6.0
