@@ -11,7 +11,7 @@
     <version>0.1</version>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <github.repo.directory>${project.build.directory}/mvn-repo</github.repo.directory>
         <github.global.server>github</github.global.server>
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>5.1.3.RELEASE</version>
+            <version>4.3.21.RELEASE</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
