@@ -83,12 +83,8 @@
                         <beehive4j.test.host>${env.BEEHIVE4J_TEST_HOST}</beehive4j.test.host>
                         <beehive4j.test.user>${env.BEEHIVE4J_TEST_USER}</beehive4j.test.user>
                         <beehive4j.test.password>${env.BEEHIVE4J_TEST_PASSWORD}</beehive4j.test.password>
-                    </systemPropertyVariables> 
-                    <!-- <useManifestOnlyJar>false</useManifestOnlyJar>
-                    <useSystemClassLoader>false</useSystemClassLoader>
-                    <reuseForks>false</reuseForks>
-                    <forkedProcessTimeoutInSeconds>300</forkedProcessTimeoutInSeconds>
-                    <forkCount>1C</forkCount> -->
+                    </systemPropertyVariables>
+                    <!-- Parallel testing does not work inside wercker jdk8 box. -->
                     <forkCount>0</forkCount>
                     <argLine>-XX:MaxPermSize=256M -Xmx256M</argLine>
                 </configuration>
