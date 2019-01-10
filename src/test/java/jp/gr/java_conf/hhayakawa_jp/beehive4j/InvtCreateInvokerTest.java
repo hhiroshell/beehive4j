@@ -63,9 +63,11 @@ public class InvtCreateInvokerTest {
                     .beeId(participant_id)
                     .build();
         participantUpdaters.add(meetingParticipantUpdater);
+        ZonedDateTime start = ZonedDateTime.now().plusDays(1).withHour(9).withMinute(0);
+        System.out.println(start);
         MeetingUpdater meetingUpdater = new MeetingUpdater.Builder()
-                .start(ZonedDateTime.now())
-                .end(ZonedDateTime.now().plusHours(1))
+                .start(start)
+                .end(start.plusHours(1))
                 .name("Test Meeting")
                 .includeOnlineConference(false)
                 .inviteeParticipantStatus(OccurrenceParticipantStatus.ACCEPTED)

@@ -9,7 +9,7 @@ public class BeehiveTestRunListener extends RunListener {
 
     @Override
     public void testRunStarted(Description description) throws Exception {
-        Logger.getRootLogger().setLevel(Level.DEBUG);
+        Logger.getRootLogger().setLevel(Level.INFO);
     }
 
 }
