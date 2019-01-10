@@ -1,4 +1,4 @@
-box: maven:3.6.0-jdk-11
+box: maven:3.6.0-jdk-8
 
 build:
   steps:
