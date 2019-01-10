@@ -84,6 +84,12 @@
                         <beehive4j.test.user>${env.BEEHIVE4J_TEST_USER}</beehive4j.test.user>
                         <beehive4j.test.password>${env.BEEHIVE4J_TEST_PASSWORD}</beehive4j.test.password>
                     </systemPropertyVariables> 
+                    <!-- <useManifestOnlyJar>false</useManifestOnlyJar>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                    <reuseForks>false</reuseForks>
+                    <forkedProcessTimeoutInSeconds>300</forkedProcessTimeoutInSeconds>
+                    <forkCount>1C</forkCount> -->
+                    <argLine>-XX:MaxPermSize=256M -Xmx256M</argLine>
                 </configuration>
             </plugin>
             <plugin>
