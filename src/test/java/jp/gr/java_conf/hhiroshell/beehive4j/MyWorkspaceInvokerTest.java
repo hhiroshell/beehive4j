@@ -25,14 +25,11 @@ public class MyWorkspaceInvokerTest {
 
     @Test
     public void test() {
-        MyWorkspaceInvoker invoker =
-                context.getInvoker(BeehiveApiDefinitions.TYPEDEF_MY_WORKSPACE);
+        MyWorkspaceInvoker invoker = context.getInvoker(BeehiveApiDefinitions.TYPEDEF_MY_WORKSPACE);
         try {
             ResponseEntity<BeehiveResponse> response = invoker.invoke();
-            assertEquals("Status code is expected to be 200 (OK).",
-                    HttpStatus.OK, response.getStatusCode());
-            assertEquals(
-                    "BeeType of the resopnse is expected to be \"personalWorkspace\"",
+            assertEquals("Status code is expected to be 200 (OK).", HttpStatus.OK, response.getStatusCode());
+            assertEquals("BeeType of the resopnse is expected to be \"personalWorkspace\"",
                     "personalWorkspace", response.getBody().getBeeType());
         } catch (Beehive4jException e) {
             fail(e.getMessage());

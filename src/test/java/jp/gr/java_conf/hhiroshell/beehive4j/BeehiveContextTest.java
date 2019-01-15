@@ -30,8 +30,7 @@ public class BeehiveContextTest {
     @Test
     public void testGetBeehiveContext() {
         try {
-            BeehiveContext context = BeehiveContext.getBeehiveContext(
-                    new URL(this.host), user, password);
+            BeehiveContext context = BeehiveContext.getBeehiveContext(new URL(this.host), user, password);
             assertNotNull(context);
         } catch (MalformedURLException | Beehive4jException e) {
             fail();

@@ -28,8 +28,7 @@ class TestUtils {
         String password = System.getProperty("beehive4j.test.password");
         BeehiveContext context = null;
         try {
-            context = BeehiveContext.getBeehiveContext(
-                    new URL(host), user, password);
+            context = BeehiveContext.getBeehiveContext(new URL(host), user, password);
         } catch (MalformedURLException | BeehiveApiFaultException e) {
             fail(e.getMessage());
         }
@@ -40,8 +39,7 @@ class TestUtils {
     }
 
     static String getDefaultCalendar(BeehiveContext context) {
-        MyWorkspaceInvoker invoker = context.getInvoker(
-                BeehiveApiDefinitions.TYPEDEF_MY_WORKSPACE);
+        MyWorkspaceInvoker invoker = context.getInvoker(BeehiveApiDefinitions.TYPEDEF_MY_WORKSPACE);
         ResponseEntity<BeehiveResponse> response = null;
         try {
             response = invoker.invoke();
@@ -57,7 +55,7 @@ class TestUtils {
 
     static String setUpSingleMeeting(BeehiveContext context, BeeId calendar) {
         // MeetingUpdater
-        ZonedDateTime start = ZonedDateTime.now().plusDays(1).withHour(9).withMinute(0);
+        ZonedDateTime start = ZonedDateTime.now().plusDays(-1).withHour(0).withMinute(0);
         MeetingUpdater meetingUpdater = new MeetingUpdater.Builder()
                 .start(start)
                 .end(start.plusHours(1))  
@@ -79,8 +77,7 @@ class TestUtils {
                 .meetingUpdater(meetingUpdater)
                 .type(type)
                 .build();
-        InvtCreateInvoker invoker =
-                context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_CREATE);
+        InvtCreateInvoker invoker = context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_CREATE);
         invoker.setRequestPayload(meetingCreater);
         String invitation_id = null;
         try {
@@ -96,10 +93,8 @@ class TestUtils {
         return invitation_id;
     }
 
-    static void tearDownSingleMeeting(
-            BeehiveContext context, String invitation_id) {
-        InvtDeleteInvoker invoker =
-                context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_DELETE);
+    static void tearDownSingleMeeting(BeehiveContext context, String invitation_id) {
+        InvtDeleteInvoker invoker = context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_DELETE);
         invoker.setPathValue(invitation_id);
         try {
             invoker.invoke();
@@ -117,8 +112,7 @@ class TestUtils {
         }
         for (String name : names) {
             if (!node.has(name)) {
-                throw new IllegalArgumentException(
-                        "Json data and requird field names aren't consistent.");
+                throw new IllegalArgumentException("Json data and required field names aren't consistent.");
             }
             if ((node = node.get(name)) == null) {
                 return null;

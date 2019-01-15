@@ -10,12 +10,10 @@ import org.springframework.http.client.ClientHttpResponse;
 
 class BeehiveRequestLoggingInterceptor implements ClientHttpRequestInterceptor {
 
-    private static final Logger logger = 
-            Logger.getLogger(BeehiveRequestLoggingInterceptor.class.getName());
+    private static final Logger logger = Logger.getLogger(BeehiveRequestLoggingInterceptor.class.getName());
 
     @Override
-    public ClientHttpResponse intercept(
-            HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+    public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
             throws IOException {
         if (logger.isDebugEnabled()) {
             logger.debug("REQUEST BODY: " + new String(body));

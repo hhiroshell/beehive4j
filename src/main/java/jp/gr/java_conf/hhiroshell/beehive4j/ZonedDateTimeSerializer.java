@@ -12,11 +12,9 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 class ZonedDateTimeSerializer extends JsonSerializer<ZonedDateTime> {
 
     @Override
-    public void serialize(ZonedDateTime datetime, JsonGenerator generator,
-            SerializerProvider serializerProvider)
-            throws IOException, JsonProcessingException {
-        generator.writeString(
-                DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(datetime));
+    public void serialize(ZonedDateTime datetime, JsonGenerator generator, SerializerProvider serializerProvider)
+            throws IOException {
+        generator.writeString(DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(datetime));
     }
 
 }

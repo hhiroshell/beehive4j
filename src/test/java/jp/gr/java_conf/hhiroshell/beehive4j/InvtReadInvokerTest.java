@@ -29,15 +29,12 @@ public class InvtReadInvokerTest {
 
     @Test
     public void test() {
-        InvtReadInvoker invoker =
-                context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_READ);
+        InvtReadInvoker invoker = context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_READ);
         invoker.setPathValue(invitation_id);
         try {
             ResponseEntity<BeehiveResponse> response = invoker.invoke();
-            assertEquals("Response code is expected to be 200 (OK)",
-                    HttpStatus.OK, response.getStatusCode());
-            assertEquals("BeeType is expected to be \"meeting\"",
-                    "meeting", response.getBody().getBeeType());
+            assertEquals("Response code is expected to be 200 (OK)", HttpStatus.OK, response.getStatusCode());
+            assertEquals("BeeType is expected to be \"meeting\"", "meeting", response.getBody().getBeeType());
         } catch (Beehive4jException e) {
             System.out.println(e.getMessage());
             fail(e.getMessage());
@@ -50,4 +47,3 @@ public class InvtReadInvokerTest {
     }
 
 }
-
