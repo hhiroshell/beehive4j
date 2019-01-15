@@ -8,12 +8,12 @@ import org.springframework.web.client.ResponseErrorHandler;
 public class BypassHttpErrorErrorHandler implements ResponseErrorHandler {
 
     @Override
-    public void handleError(ClientHttpResponse arg0) throws IOException {
+    public void handleError(ClientHttpResponse arg0) {
         // Error responses will be handled in BeehiveInvoker.
     }
 
     @Override
-    public boolean hasError(ClientHttpResponse arg0) throws IOException {
+    public boolean hasError(ClientHttpResponse arg0) {
         // Error responses will be handled in BeehiveInvoker.
         return false;
     }

@@ -44,8 +44,7 @@ public class InvtReadBatchInvokerTest {
                 .start(ZonedDateTime.now())
                 .end(ZonedDateTime.now().plusDays(7))
                 .build();
-        InvtListByRangeInvoker invoker = context.getInvoker(
-                BeehiveApiDefinitions.TYPEDEF_INVT_LIST_BY_RANGE);
+        InvtListByRangeInvoker invoker = context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_LIST_BY_RANGE);
         invoker.setRequestPayload(range);
         try {
             ResponseEntity<BeehiveResponse> response = invoker.invoke();
@@ -64,16 +63,13 @@ public class InvtReadBatchInvokerTest {
             beeIds.add(new BeeId.Builder().id(id).build());
         }
         BeeIdList beeIdList = new BeeIdList(beeIds);
-        InvtReadBatchInvoker invoker = context.getInvoker(
-                BeehiveApiDefinitions.TYPEDEF_INVT_READ_BATCH);
+        InvtReadBatchInvoker invoker = context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_READ_BATCH);
         invoker.setRequestPayload(beeIdList);
         try {
             ResponseEntity<BeehiveResponse> response = invoker.invoke();
             // System.out.println(response.getBody().getJson().toString());
-            assertEquals("Status code is expected to be 200 (OK).",
-                    HttpStatus.OK, response.getStatusCode());
-            assertEquals("Beetype is expected to be \"list\"", "list",
-                    response.getBody().getBeeType());
+            assertEquals("Status code is expected to be 200 (OK).", HttpStatus.OK, response.getStatusCode());
+            assertEquals("Beetype is expected to be \"list\"", "list", response.getBody().getBeeType());
         } catch (Beehive4jException e) {
             // TODO cause may be null.
             System.out.println(e.getCause().getMessage());

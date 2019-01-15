@@ -11,9 +11,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 class BeehiveResponseDeserializer extends JsonDeserializer<BeehiveResponse> {
 
     @Override
-    public BeehiveResponse deserialize(
-            JsonParser jsonParser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+    public BeehiveResponse deserialize(JsonParser jsonParser, DeserializationContext context)
+            throws IOException {
         JsonNode jsonNode = jsonParser.getCodec().readTree(jsonParser);
         String beeType = null;
         if (jsonNode != null) {

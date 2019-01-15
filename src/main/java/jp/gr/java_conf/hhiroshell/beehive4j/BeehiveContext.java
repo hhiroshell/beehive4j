@@ -73,12 +73,10 @@ public class BeehiveContext {
      * @return BeehiveContext that represents session context with beehive.
      * @throws BeehiveApiFaultException - When it failed to call the "session/login" of Beehive REST API.
      */
-    public static BeehiveContext getBeehiveContext(URL host, String user,
-            String password) throws BeehiveApiFaultException {
-        if (user == null || user.length() == 0 
-                || password == null || password.length() == 0) {
-            throw new IllegalArgumentException(
-                    "User name or password is not specified.");
+    public static BeehiveContext getBeehiveContext(URL host, String user, String password)
+            throws BeehiveApiFaultException {
+        if (user == null || user.length() == 0 || password == null || password.length() == 0) {
+            throw new IllegalArgumentException("User name or password is not specified.");
         }
         String basicAuthHeader = makeBasicAuthString(user, password);
         return getBeehiveContext(host, basicAuthHeader);
@@ -101,21 +99,18 @@ public class BeehiveContext {
     public static BeehiveContext getBeehiveContext(
             URL host, String basicAuthHeader) throws BeehiveApiFaultException {
         if (host == null) {
-            throw new IllegalArgumentException(
-                    "Destination URL is not specified.");
+            throw new IllegalArgumentException("Destination URL is not specified.");
         }
         if (basicAuthHeader == null) {
-            throw new IllegalArgumentException(
-                    "Basic auth header is not specified.");
+            throw new IllegalArgumentException("Basic auth header is not specified.");
         }
         String api_root = makeApiRootString(host);
         return new BeehiveContext(api_root, login(api_root, basicAuthHeader));
     }
 
-    private static BeehiveCredential login(String api_root,
-            String basicAuthHeader) throws BeehiveApiFaultException {
+    private static BeehiveCredential login(String api_root, String basicAuthHeader) throws BeehiveApiFaultException {
         BeehiveInvoker<Object> invoker = new SessionLoginInvoker(api_root, null);
-        Map<String, String> header = new HashMap<String, String>(1);
+        Map<String, String> header = new HashMap<>(1);
         header.put(HttpHeaders.AUTHORIZATION, basicAuthHeader);
         invoker.addHeader(header);
         ResponseEntity<BeehiveResponse> response = invoker.invoke();
@@ -138,32 +133,28 @@ public class BeehiveContext {
     }
 
     private static String makeApiRootString(URL host) {
-        StringBuffer buf = new StringBuffer();
-        buf.append(host.getProtocol());
-        buf.append("://");
-        buf.append(host.getHost());
+        StringBuffer buf = new StringBuffer()
+                .append(host.getProtocol())
+                .append("://")
+                .append(host.getHost());
         int port = host.getPort();
         if (port >= 0) {
-            buf.append(":");
-            buf.append(port);
+            buf.append(":").append(port);
         }
-        buf.append("/");
-        buf.append(BEEHIVE_API_CONTEXT_ROOT);
+        buf.append("/").append(BEEHIVE_API_CONTEXT_ROOT);
         return buf.toString();
     }
 
     private static String makeBasicAuthString(String user, String password) {
         if (user.contains(":")) {
-            throw new IllegalArgumentException(
-                    "User name must not contain \":\".");
+            throw new IllegalArgumentException("User name must not contain \":\".");
         }
         String src = user.trim() + ":" + password;
         byte[] encoded = Base64.getEncoder().encode(src.getBytes());
         return "Basic " + new String(encoded);
     }
 
-    private static HttpCookie parseCookie(
-            List<String> setCookieHeader, String cookieName) {
+    private static HttpCookie parseCookie(List<String> setCookieHeader, String cookieName) {
         String[] attributes = null;
         for (String elm : setCookieHeader) {
             if (elm.startsWith(cookieName + "=")) {
@@ -203,8 +194,7 @@ public class BeehiveContext {
             Object[] args = {this.api_root, this.credential};
             T invoker = constructor.newInstance(args);
             return invoker;
-        } catch (NoSuchMethodException | SecurityException |
-                InstantiationException | IllegalAccessException |
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException |
                 IllegalArgumentException | InvocationTargetException e) {
             throw new IllegalStateException(
                     "Failed to create a invoker instance using reflection.", e);

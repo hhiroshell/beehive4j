@@ -29,15 +29,13 @@ public class InvtDeleteInvokerTest {
 
     @Test
     public void test() {
-        InvtDeleteInvoker invoker =
-                context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_DELETE);
+        InvtDeleteInvoker invoker = context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_DELETE);
         invoker.setPathValue(invitation_id);
         try {
             ResponseEntity<BeehiveResponse> response = invoker.invoke();
             assertEquals("Response code is expected to be 204 (No Content)",
                     HttpStatus.NO_CONTENT, response.getStatusCode());
-            assertNull("Response body is expected to be null.",
-                    response.getBody());
+            assertNull("Response body is expected to be null.", response.getBody());
         } catch (Beehive4jException e) {
             System.out.println(e.getMessage());
             fail(e.getMessage());

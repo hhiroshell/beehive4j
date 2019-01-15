@@ -35,21 +35,17 @@ public abstract class BeehiveInvoker<T> {
     private static final RestTemplate template = new RestTemplate();
 
     static {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(
-                ZonedDateTime.class, new ZonedDateTimeSerializer());
-        module.addDeserializer(
-                BeehiveResponse.class, new BeehiveResponseDeserializer());
-        mapper.registerModule(module);
+        SimpleModule module = new SimpleModule()
+                .addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer())
+                .addDeserializer(BeehiveResponse.class, new BeehiveResponseDeserializer());
+        ObjectMapper mapper = new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                .registerModule(module);
 
         // converter
-        MappingJackson2HttpMessageConverter converter =
-                new MappingJackson2HttpMessageConverter();
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setObjectMapper(mapper);
-        List<HttpMessageConverter<?>> converters =
-                new ArrayList<HttpMessageConverter<?>>(1);
+        List<HttpMessageConverter<?>> converters = new ArrayList<>(1);
         converters.add(converter);
         template.setMessageConverters(converters);
 
@@ -57,8 +53,7 @@ public abstract class BeehiveInvoker<T> {
         template.setErrorHandler(new BypassHttpErrorErrorHandler());
 
         // intercepter
-        List<ClientHttpRequestInterceptor> interceptors = 
-                new ArrayList<ClientHttpRequestInterceptor>(1);
+        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>(1);
         interceptors.add(new BeehiveRequestLoggingInterceptor());
         template.setInterceptors(interceptors);;
     }
@@ -73,8 +68,8 @@ public abstract class BeehiveInvoker<T> {
         HttpEntity<T> entity = new HttpEntity<>(requestPayload, headers);
         ResponseEntity<BeehiveResponse> result;
         try {
-            result = template.exchange(makeUrlString() + makeQueryString(), getHttpMethod(),
-                    entity, BeehiveResponse.class);
+            result = template.exchange(
+                    makeUrlString() + makeQueryString(), getHttpMethod(), entity, BeehiveResponse.class);
         } catch (RestClientException e) {
             /*
              * Could not reach logic of the beehive.
@@ -123,8 +118,7 @@ public abstract class BeehiveInvoker<T> {
             return;
         }
         HttpCookie sessionCookie = credential.getSession();
-        headers.add(HttpHeaders.COOKIE,
-                sessionCookie.getName() + "=" + sessionCookie.getValue());
+        headers.add(HttpHeaders.COOKIE, sessionCookie.getName() + "=" + sessionCookie.getValue());
     }
 
     private void setDefaultUrlQueries(BeehiveCredential credential) {
@@ -141,13 +135,12 @@ public abstract class BeehiveInvoker<T> {
     }
 
     private String makeUrlString() {
-        StringBuffer bf = new StringBuffer();
-        bf.append(apiRoot);
-        bf.append(getApiPath());
+        StringBuffer bf = new StringBuffer()
+                .append(apiRoot)
+                .append(getApiPath());
         String pathValue = getPathValue();
         if (pathValue.length() > 0) {
-            bf.append("/");
-            bf.append(pathValue);
+            bf.append("/").append(pathValue);
         }
         return bf.toString();
     }
@@ -194,8 +187,7 @@ public abstract class BeehiveInvoker<T> {
         throw new BeehiveApiUnexpectedFaultException("unexpected failure.", e);
     }
 
-    private static void throwExceptionIfNecessary(
-            ResponseEntity<BeehiveResponse> responseEntity)
+    private static void throwExceptionIfNecessary(ResponseEntity<BeehiveResponse> responseEntity)
                     throws BeehiveHttpErrorException {
         JsonNode json = responseEntity.getBody().getJson();
         JsonNode fault = json.get("fault");

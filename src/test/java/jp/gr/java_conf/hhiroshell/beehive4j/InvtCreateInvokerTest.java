@@ -31,8 +31,7 @@ public class InvtCreateInvokerTest {
 
     private static final String PARTICIPANT_RESOURCE_ID =
             "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DDD86644";
-    private static final String PARTICIPANT_RESOURCE_ADDRESS =
-            "mailto:JP-OAC-CONF-17006_17M1@oracle.com";
+    private static final String PARTICIPANT_RESOURCE_ADDRESS = "mailto:JP-OAC-CONF-17006_17M1@oracle.com";
 
     private BeehiveContext context = null;
 
@@ -51,19 +50,17 @@ public class InvtCreateInvokerTest {
                 .build();
 
         // MeetingUpdater
-        List<MeetingParticipantUpdater> participantUpdaters = 
-                new ArrayList<MeetingParticipantUpdater>(1);
+        List<MeetingParticipantUpdater> participantUpdaters = new ArrayList<>(1);
         BeeId participant_id = new BeeId.Builder()
                 .id(PARTICIPANT_RESOURCE_ID)
                 .build();
-        MeetingParticipantUpdater meetingParticipantUpdater = 
-                new MeetingParticipantUpdater.Builder()
+        MeetingParticipantUpdater meetingParticipantUpdater = new MeetingParticipantUpdater.Builder()
                     .address(PARTICIPANT_RESOURCE_ADDRESS)
                     .operation(MeetingParticipantUpdaterOperation.ADD)
                     .beeId(participant_id)
                     .build();
         participantUpdaters.add(meetingParticipantUpdater);
-        ZonedDateTime start = ZonedDateTime.now().plusDays(1).withHour(9).withMinute(0);
+        ZonedDateTime start = ZonedDateTime.now().plusDays(-1).withHour(9).withMinute(0);
         MeetingUpdater meetingUpdater = new MeetingUpdater.Builder()
                 .start(start)
                 .end(start.plusHours(1))
@@ -81,20 +78,19 @@ public class InvtCreateInvokerTest {
         // OccurenceType
         OccurrenceType type = OccurrenceType.MEETING;
 
-        MeetingCreator meetingCreater = new MeetingCreator.Builder()
+        MeetingCreator meetingCreator = new MeetingCreator.Builder()
                 .calendar(defaultCalendarId)
                 .meetingUpdater(meetingUpdater)
                 .type(type)
                 .build();
-        InvtCreateInvoker invoker =
-                context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_CREATE);
-        invoker.setRequestPayload(meetingCreater);
+        InvtCreateInvoker invoker = context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_CREATE);
+        invoker.setRequestPayload(meetingCreator);
         try {
             ResponseEntity<BeehiveResponse> response = invoker.invoke();
-            assertEquals("Response code is expected to be 201 (Created)",
-                    HttpStatus.CREATED, response.getStatusCode());
-            assertEquals("BeeType is expected to be \"meeting\"",
-                    "meeting", response.getBody().getBeeType());
+            assertEquals(
+                    "Response code is expected to be 201 (Created)", HttpStatus.CREATED, response.getStatusCode());
+            assertEquals(
+                    "BeeType is expected to be \"meeting\"", "meeting", response.getBody().getBeeType());
             JsonNode json = response.getBody().getJson();
             invitation_id = json.get("collabId").get("id").asText();
         } catch (Beehive4jException e) {
