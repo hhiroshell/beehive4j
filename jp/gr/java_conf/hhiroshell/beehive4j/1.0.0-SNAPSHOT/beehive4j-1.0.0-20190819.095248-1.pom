@@ -8,7 +8,7 @@
     <groupId>jp.gr.java_conf.hhiroshell</groupId>
     <artifactId>beehive4j</artifactId>
     <packaging>jar</packaging>
-    <version>v0.1</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <properties>
         <java.version>8</java.version>
@@ -35,19 +35,14 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.8</version>
+            <version>2.9.9</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.9.8</version>
+            <version>2.9.9</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -73,16 +68,11 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.1</version>
                 <configuration>
-                    <properties>
-                        <property>
-                            <name>listener</name>
-                            <value>jp.gr.java_conf.hhiroshell.beehive4j.BeehiveTestRunListener</value>
-                        </property>
-                    </properties>
-                    <systemPropertyVariables> 
+                    <systemPropertyVariables>
                         <beehive4j.test.host>${env.BEEHIVE4J_TEST_HOST}</beehive4j.test.host>
                         <beehive4j.test.user>${env.BEEHIVE4J_TEST_USER}</beehive4j.test.user>
                         <beehive4j.test.password>${env.BEEHIVE4J_TEST_PASSWORD}</beehive4j.test.password>
+                        <BEEHIVE4J_LOG_LEVEL>${env.BEEHIVE4J_TEST_LOG_LEVEL}</BEEHIVE4J_LOG_LEVEL>
                     </systemPropertyVariables>
                     <!-- Parallel testing does not work inside wercker jdk8 box. -->
                     <forkCount>0</forkCount>
