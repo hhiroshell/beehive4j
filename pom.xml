@@ -68,16 +68,11 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.1</version>
                 <configuration>
-                    <properties>
-                        <property>
-                            <name>listener</name>
-                            <value>jp.gr.java_conf.hhiroshell.beehive4j.BeehiveTestRunListener</value>
-                        </property>
-                    </properties>
-                    <systemPropertyVariables> 
+                    <systemPropertyVariables>
                         <beehive4j.test.host>${env.BEEHIVE4J_TEST_HOST}</beehive4j.test.host>
                         <beehive4j.test.user>${env.BEEHIVE4J_TEST_USER}</beehive4j.test.user>
                         <beehive4j.test.password>${env.BEEHIVE4J_TEST_PASSWORD}</beehive4j.test.password>
+                        <BEEHIVE4J_LOG_LEVEL>${env.BEEHIVE4J_TEST_LOG_LEVEL}</BEEHIVE4J_LOG_LEVEL>
                     </systemPropertyVariables>
                     <!-- Parallel testing does not work inside wercker jdk8 box. -->
                     <forkCount>0</forkCount>
